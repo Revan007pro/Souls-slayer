@@ -1,0 +1,4 @@
+# Ignorar TODO excepto la carpeta 'scripts/'
+*
+!scripts/
+!.gitignore
