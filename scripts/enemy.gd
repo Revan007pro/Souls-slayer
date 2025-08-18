@@ -1,4 +1,4 @@
-extends Node3D
+extends Personaje
 
 # Variables
 var cronometro: float

@@ -3,7 +3,7 @@ extends Personaje
 
 @export var speed: float = 5.0
 @export var acceleration: float = 75.0
-@export var fuerza_salto: float = 8.4
+@export var fuerza_salto: float = 4.5
 
 
 @onready var pivote: Node3D = $Pivote
@@ -17,6 +17,7 @@ var rotacion_vertical: float = 0.0
 var _vector2: Vector2 = Vector2.ZERO
 var is_movieng: bool = false
 var Jumping: bool = false
+var can_jump: bool = true
 
 
 var sensibilidad_camara: float = 0.5
@@ -32,8 +33,8 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	_movimiento_jugador(delta)
 	_aplicar_gravedad(delta)
-	move_and_slide()
 	_salto_jugador()
+	move_and_slide()
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
@@ -41,19 +42,28 @@ func _physics_process(delta: float) -> void:
 
 func _movimiento_jugador(delta: float) -> void:
 	var input_dir = Input.get_vector("atras", "adelante", "derecha", "izquierda")
-	
 	var direction = (transform.basis * Vector3(input_dir.x, 0, -input_dir.y)).normalized()
 	
 	if direction != Vector3.ZERO:
 		velocity.x = move_toward(velocity.x, direction.x * speed, acceleration * delta)
 		velocity.z = move_toward(velocity.z, direction.z * speed, acceleration * delta)
-		_vector2 = Vector2(input_dir.x, -input_dir.y)  # Ajustado para animaciones
+		_vector2 = Vector2(input_dir.x, -input_dir.y)
 		is_movieng = true
 	else:
 		velocity.x = move_toward(velocity.x, 0, acceleration * delta)
 		velocity.z = move_toward(velocity.z, 0, acceleration * delta)
 		is_movieng = false
 		_vector2 = Vector2.ZERO
+
+func _salto_jugador():
+	if Input.is_action_just_pressed("salto") and is_on_floor() and can_jump:
+		can_jump = false
+		velocity.y += fuerza_salto
+		await get_tree().create_timer(2.5).timeout
+		can_jump = true
+		Jumping = true
+		print("saltando")
+		
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
@@ -73,17 +83,19 @@ func _input(event: InputEvent) -> void:
 		)
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-			camara.position.x += 0.1  # Alejar
+			camara.position.x += 0.1 
 			camara.position.x = clamp(camara.position.x, 1.0, 0.9)
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			camara.position.x -= 0.1  # Acercar
+			camara.position.x -= 0.1 
 			camara.position.x = clamp(camara.position.x, 1.0, -0.5)
+
+
 		
-func _salto_jugador() -> void:
-	if Input.is_action_just_pressed("salto") and is_on_floor():
-		velocity.y += fuerza_salto
-		Jumping = true
-		print("saltando")
+	
+		
+
+	 
+		
 		
 
 		
