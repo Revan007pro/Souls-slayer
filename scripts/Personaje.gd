@@ -80,13 +80,3 @@ func _aplicar_gravedad(delnta:float) -> void:
         velocity.y -=gravedad *delnta
     else:
         velocity.y=0
-
-
-
-
-
-
-    
-	
-		
-	

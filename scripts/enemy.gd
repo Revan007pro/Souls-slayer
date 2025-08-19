@@ -1,87 +1,60 @@
 extends Personaje
-
-# Variables
 var cronometro: float
 var rutina: int
 var angulo_rotacion_aleatorio: Quaternion
-var agente: NavigationAgent3D
-@export var Player: Node3D
-#var animator: AnimationTree
-var audio_source: AudioStreamPlayer3D
-var _vida: float = 100.0
-var _contador: float = 20.0
-
-var animation_speed: float = 3.5
 var tiempo_maximo_rutina: float = 4.0
-var speed_param: String = "Speed"
-
-var walk_param: String = "Walk"
-var atacar_param: String = "Atacar"
-var max_animation_speed: float
-
-var rango_detectar_jugador: float = 5.0
-var _rango_strop: float = 0.3
 var rango_movimiento_aleatorio: float = 5.0
 var velocidad_idle: float = 0.0
 var velocidad_walk_animacion: float = 0.5
 var velocidad_run_animacion: float = 1.0
+var _cronometro:float
+var _rutina:int
+
 
 var _atacar_param: bool = false
 var is_walking: bool
 
+@export var speed: float = 3.0
+@export var detection_range: float = 5.0  # Rango para detectar al jugador
+@export var stopping_distance: float = 1.0  # Distancia para detenerse
+@export var _player: CharacterBody3D  # Arrastra tu jugador aquí desde el editor
+
+@onready var nav_agent = $NavigationAgent3D
+
 func _ready():
-	agente = $NavigationAgent3D
-	#animator = $AnimationTree
-	rutina = 0
-	cronometro = tiempo_maximo_rutina
+	nav_agent.velocity_computed.connect(_on_velocity_computed)
+	nav_agent.path_desired_distance = 0.5
+	nav_agent.target_desired_distance = stopping_distance
+	_cronometro=tiempo_maximo_rutina
+	_rutina=0
+	clase_mago()
 	
-	# Esperar un frame para asegurar que estamos en el árbol de escena
-	await get_tree().process_frame
+	
 
-func _process(delta):
-	#if agente == null or Player == null or animator == null:
-		#return
-
+func _physics_process(delta):
 	comportamiento_enemigo()
+	_aplicar_gravedad(delta)
+	move_and_slide()
 
-func comportamiento_enemigo():
-	var distancia_al_jugador = global_position.distance_to(Player.global_position)
-
-	if distancia_al_jugador <= rango_detectar_jugador:
-		rutina = 2
-		cronometro = 0
-	elif rutina != 2:
-		cronometro += get_process_delta_time()
-
-		if cronometro >= tiempo_maximo_rutina:
-			rutina = randi_range(0, 1)
-			cronometro = 0
-			if rutina == 1:
-				var grado_aleatorio = randf_range(0.0, 360.0)
-				angulo_rotacion_aleatorio = Quaternion.from_euler(Vector3(0, deg_to_rad(grado_aleatorio), 0))
-
-	match rutina:
+func comportamiento_enemigo() ->void:
+	var distance_to_target = global_position.distance_to(_player.global_position)
+	if distance_to_target <= detection_range:
+		_rutina=1
+	else:
+		_rutina=0
+	match _rutina:
 		0:
-			agente.target_position = global_position
-		
+			velocity = Vector3.ZERO
 		1:
-			var direccion_aleatoria = angulo_rotacion_aleatorio * Vector3.FORWARD * rango_movimiento_aleatorio
-			var punto_destino_aleatorio = global_position + direccion_aleatoria
+			nav_agent.target_position = _player.global_position
+			if !nav_agent.is_navigation_finished():
+				var next_pos = nav_agent.get_next_path_position()
+				var direction = (next_pos - global_position).normalized()
+				velocity = direction * speed
+				print(_atributos)
 			
-			# Usar directamente el NavigationAgent3D para establecer el destino
-			agente.target_position = punto_destino_aleatorio
-			
-			# Verificar si el destino es alcanzable
-			if not agente.is_target_reachable():
-				rutina = 0
-				cronometro = 0
 		
-		2:
-			if global_position.distance_to(Player.global_position) <= _rango_strop:
-				agente.target_position = global_position
-				rutina = 3
-			else:
-				agente.target_position = Player.global_position
 		
-		3:
-			pass
+
+func _on_velocity_computed(safe_velocity):
+	velocity = safe_velocity
