@@ -40,3 +40,10 @@ func _on_trigger_entered(other: Node3D):
 			
 			if punto_cercano != Vector3.ZERO:
 				agente.target_position = punto_cercano
+can_jump = false
+		Jumping = true
+		velocity.y += fuerza_salto
+		anim_playback.travel("Jump")
+		await get_tree().create_timer(2.5).timeout
+		can_jump = true
+		Jumping = false
