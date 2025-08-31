@@ -7,7 +7,7 @@ extends Personaje
 
 @onready var pivote: Node3D = $Pivote
 @onready var anim_tree: AnimationTree = $AnimationTree
-@onready var camara: Camera3D = $Pivote/Camera3D
+@onready var _camara: Camera3D = $Pivote/Camera3D
 @onready var ray_suelo: RayCast3D = $RayCast3D
 
 var rotacion_horizontal: float = 0.0
@@ -86,9 +86,6 @@ func _detectar_suelo_raycast():
 		Jumping = false
 		anim_playback.travel("State")
 
-
-
-
 func _input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion:
 		rotate_y(deg_to_rad(-event.relative.x * sensibilidad_camara))
@@ -97,10 +94,17 @@ func _input(event: InputEvent) -> void:
 		pivote.rotation.x = clamp(pivote.rotation.x, deg_to_rad(-70.0), deg_to_rad(70.0))
 		pivote.rotation.z = clamp(pivote.rotation.z, deg_to_rad(-49.0), deg_to_rad(50.0))
 
-	if event is InputEventMouseButton:
+	elif event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
-			camara.position.x += 0.1 
-			camara.position.x = clamp(camara.position.x, 1.0, 0.9)
+			_camara.position.x += 0.1 
+			_camara.position.x = clamp(_camara.position.x, 1.0, 0.9)
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
-			camara.position.x -= 0.1 
-			camara.position.x = clamp(camara.position.x, 1.0, -0.5)
+			_camara.position.x -= 0.1 
+			_camara.position.x = clamp(_camara.position.x, 1.0, -0.5)
+	elif _camara.global_position==pivote.global_position:
+		_camara.position.x=0
+		pivote.rotate_z(deg_to_rad(-event.relative.y * sensibilidad_camara))
+		
+		pivote.rotation.x = clamp(pivote.rotation.x, deg_to_rad(0), deg_to_rad(0))
+		pivote.rotation.z = clamp(pivote.rotation.z, deg_to_rad(0), deg_to_rad(0))
+		pivote.rotation.y = clamp(pivote.rotation.y, deg_to_rad(0), deg_to_rad(0))

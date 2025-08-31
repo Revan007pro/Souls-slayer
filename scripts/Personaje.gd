@@ -75,8 +75,8 @@ func clase_mago() ->void:
 func muerte() -> void:
 	print("¡El personaje ha muerto!")
 
-func _aplicar_gravedad(delnta:float) -> void:
+func _aplicar_gravedad(delta:float) -> void:
 	if not is_on_floor():
-		velocity.y -=gravedad *delnta
+		velocity.y -=gravedad *delta
 	else:
 		velocity.y=0
