@@ -9,16 +9,23 @@ extends Personaje
 @onready var anim_tree: AnimationTree = $AnimationTree
 @onready var _camara: Camera3D = $Pivote/Camera3D
 @onready var ray_suelo: RayCast3D = $RayCast3D
+#@onready var _timer=get_node("Timer")
+
+signal golpe_conectado(damage: float)
+var health: float = 100.0
 
 var rotacion_horizontal: float = 0.0
 var rotacion_vertical: float = 0.0
 var anim_playback: AnimationNodeStateMachinePlayback
+var damage_amount:float=10
 
 var _vector2: Vector2 = Vector2.ZERO
 var is_movieng: bool = false
 var Jumping: bool = false
 var can_jump: bool = true
 var __rolling: bool
+var attack_radio:float=1.0
+
 
 var sensibilidad_camara: float = 0.5
 
@@ -26,6 +33,10 @@ func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	anim_tree.active = true
 	anim_playback = anim_tree.get("parameters/playback")
+	add_to_group("Player")
+	$AttackArea.body_entered.connect(_on_attack_area_body_entered)
+	#_timer.wait_time=attack_radio
+	#_timer.start()
 	
 
 	if ray_suelo:
@@ -36,7 +47,9 @@ func _physics_process(delta: float) -> void:
 	_movimiento_jugador(delta)
 	_aplicar_gravedad(delta)
 	_salto_jugador()
-	_detectar_suelo_raycast() 
+	_detectar_suelo_raycast()
+	muerte()
+	#recibir_daño() 
 	move_and_slide()
 
 	
@@ -108,3 +121,21 @@ func _input(event: InputEvent) -> void:
 		pivote.rotation.x = clamp(pivote.rotation.x, deg_to_rad(0), deg_to_rad(0))
 		pivote.rotation.z = clamp(pivote.rotation.z, deg_to_rad(0), deg_to_rad(0))
 		pivote.rotation.y = clamp(pivote.rotation.y, deg_to_rad(0), deg_to_rad(0))
+
+func deal_damage() ->void:
+	golpe_conectado.emit(damage_amount)
+	
+
+
+func _on_attack_area_body_entered(body):
+	if body.is_in_group("enemy"): 
+		print("¡GOLPE CONECTADO! Aplicando daño")
+		health -=damage_amount
+		print(health)
+	if health<=0:
+		queue_free()
+		get_tree().reload_current_scene()
+		if body.has_method("take_damage"):
+			body.take_damage(10.0)
+			
+	

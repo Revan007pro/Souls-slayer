@@ -15,6 +15,13 @@ var anim_playback:AnimationNodeStateMachinePlayback
 var _vector2: Vector2 = Vector2.ZERO
 var is_moving: bool = false
 var is_attacking:bool=false
+var attack_count:int=2
+var _hevy:bool=false
+var _ataque_fuerte:float=7.5
+signal golpe_conectado(damage: float)
+var health: float = 100.0
+@onready var attack_area: Area3D = $AttackArea
+@export var damage_amount: float = 10.0
 
 # Variables de estado
 var _cronometro: float = 0.0
@@ -27,51 +34,59 @@ func _ready():
 	clase_mago()
 	anim_tree.active = true
 	anim_playback = anim_tree.get("parameters/playback")
+	add_to_group("enemy")
+	$AttackArea.body_entered.connect(_on_damage_area_body_entered)
 
 func _physics_process(delta):
 	comportamiento_enemigo()
 	_aplicar_gravedad(delta)
-	update_animation()
 	move_and_slide()
 
 func comportamiento_enemigo() -> void:
 	
 	var distance_to_target = global_position.distance_to(_player.global_position)
 	
-	# Lógica de cambio de rutina
+	
+		
 	if distance_to_target <= detection_range:
 		_rutina = 1  # Perseguir jugador
 		_cronometro = 0
 		if distance_to_target <= stopping_distance:
 			_rutina = 3
+	if distance_to_target <= _ataque_fuerte and distance_to_target > stopping_distance:
+					look_at(_player.global_position)
+					_hevy = true
+					anim_playback.travel("Hevy")
+					velocity = Vector3.ZERO
 	elif _rutina != 1:
 		_cronometro += get_process_delta_time()
 		if _cronometro >= tiempo_maximo_rutina:
-			_rutina = randi_range(0, 2)
+			_rutina = randi_range(0, 3)
 			_cronometro = 0
 			if _rutina == 2:  # Solo para rutina 2 generamos rotación aleatoria
 				var grado_aleatorio = randf_range(0.0, 360.0)
 				angulo_rotacion_aleatorio = Quaternion.from_euler(Vector3(0, deg_to_rad(grado_aleatorio), 0))
-	elif is_attacking:
-		velocity=Vector3.ZERO
-		return
-	
-	# Ejecutar rutina actual
+
 	match _rutina:
 		0: 
 			velocity = Vector3.ZERO
 			is_moving = false
+			anim_playback.travel("State")
 			
 		1: 
 			nav_agent.target_position = _player.global_position
 			if distance_to_target<=detection_range:
 				is_moving = true
+				_vector2 = Vector2(1, 0)
+				anim_tree.set("parameters/State/blend_position", _vector2) 
 				var next_pos = nav_agent.get_next_path_position()
 				var direction = (next_pos - global_position).normalized()
 				velocity = direction * speed
+			
 
 			else:
 				nav_agent.target_position =global_position
+				_vector2 = Vector2(0, 0)
 				is_moving=false
 				
 				
@@ -84,27 +99,45 @@ func comportamiento_enemigo() -> void:
 				var next_pos = nav_agent.get_next_path_position()
 				var direction = (next_pos - global_position).normalized()
 				velocity = direction * speed
+				is_moving = true
+				_vector2 = Vector2(1, 0)
+				anim_tree.set("parameters/State/blend_position", _vector2) 
 				# Rotación básica
 				rotation.y = lerp_angle(rotation.y, atan2(direction.x, direction.z), rotation_speed * get_process_delta_time())
+
 		3:
+					
 			if distance_to_target <= stopping_distance:
 				velocity = Vector3.ZERO
 				is_moving = false
 				is_attacking = true
+				look_at(_player.global_position)
 				anim_playback.travel("Attack")
+				if distance_to_target==detection_range:
+					is_moving=true
 			else:
 				is_attacking = false
+				_rutina=1
 				anim_playback.travel("State")
-
-	
+	anim_tree.set("parameters/State/blend_position", _vector2)
+		
 func _on_velocity_computed(safe_velocity):
 	velocity = safe_velocity
 
+func deal_damage(damage_amount:float=10) ->void:
+	golpe_conectado.emit(damage_amount)
 
-func update_animation():
-	if is_moving:
-		_vector2 = Vector2(1, 0)  
-	else:
-		_vector2 = Vector2(0, 0)  
+
+func _on_attack_area_body_entered(body: Node3D):
+	if body.is_in_group("player"):
+		if body.has_method("take_damage"):
+			print("asiendo daño: ", damage_amount)
+			body.take_damage(damage_amount)
+
+func _on_damage_area_body_entered(body):
+	if body.is_in_group("player"):  # ← AHORA FUNCIONARÁ
+		print("¡RECIBIENDO DAÑO del jugador!")
+
 	
-	anim_tree.set("parameters/State/blend_position", _vector2)
+
+		
