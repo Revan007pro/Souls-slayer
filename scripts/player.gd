@@ -9,23 +9,28 @@ extends Personaje
 @onready var anim_tree: AnimationTree = $AnimationTree
 @onready var _camara: Camera3D = $Pivote/Camera3D
 @onready var ray_suelo: RayCast3D = $RayCast3D
-#@onready var _timer=get_node("Timer")
 
 signal golpe_conectado(damage: float)
-var health: float = 100.0
+signal dead_signal(is_dead: bool)
 
+var health: float = 100.0
 var rotacion_horizontal: float = 0.0
 var rotacion_vertical: float = 0.0
 var anim_playback: AnimationNodeStateMachinePlayback
-var damage_amount:float=10
+var damage_amount: float = 10
+var is_first_spawn: bool = true
+
 
 var _vector2: Vector2 = Vector2.ZERO
 var is_movieng: bool = false
 var Jumping: bool = false
 var can_jump: bool = true
-var __rolling: bool
-var attack_radio:float=1.0
-
+var __rolling: bool = false
+var attack_radio: float = 1.0
+var is_dead: bool = false
+var is_attacking: bool = false
+var wait_star: float = 2.8
+var wait_to_star: bool = false
 
 var sensibilidad_camara: float = 0.5
 
@@ -33,32 +38,37 @@ func _ready() -> void:
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	anim_tree.active = true
 	anim_playback = anim_tree.get("parameters/playback")
-	add_to_group("Player")
+	wait_start()
 	$AttackArea.body_entered.connect(_on_attack_area_body_entered)
-	#_timer.wait_time=attack_radio
-	#_timer.start()
-	
+	call_deferred("_deferred_ready")
 
-	if ray_suelo:
-		ray_suelo.enabled = true
-
+func _deferred_ready() -> void:
+	# Reproducir animación de levantarse solo al inicio
+	if is_first_spawn:
+		play_get_up_animation()
+		is_first_spawn = false
+	else:
+		# Si no es la primera vez, ir directamente al estado normal
+		anim_playback.travel("State")
 
 func _physics_process(delta: float) -> void:
+	if is_dead:
+		return  # Si está muerto, no procesar movimiento ni otras acciones
+	
 	_movimiento_jugador(delta)
 	_aplicar_gravedad(delta)
 	_salto_jugador()
 	_detectar_suelo_raycast()
-	muerte()
-	#recibir_daño() 
-	move_and_slide()
-
 	
-
+	move_and_slide()
+	
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
-
 func _movimiento_jugador(delta: float) -> void:
+	if is_dead:
+		return
+	
 	var input_dir = Input.get_vector("atras", "adelante", "derecha", "izquierda")
 	var direction = (transform.basis * Vector3(input_dir.x, 0, -input_dir.y)).normalized()
 	
@@ -67,12 +77,12 @@ func _movimiento_jugador(delta: float) -> void:
 		velocity.z = move_toward(velocity.z, direction.z * speed, acceleration * delta)
 		_vector2 = Vector2(input_dir.x, -input_dir.y)
 		is_movieng = true
-	elif Input.is_action_just_pressed("rolling"):
-		__rolling=true
+	elif Input.is_action_just_pressed("rolling") and not __rolling:
+		__rolling = true
 		anim_playback.travel("Rolling")
 		await get_tree().create_timer(1.4).timeout
+		__rolling = false
 		anim_playback.travel("State")
-
 	else:
 		velocity.x = move_toward(velocity.x, 0, acceleration * delta)
 		velocity.z = move_toward(velocity.z, 0, acceleration * delta)
@@ -81,25 +91,30 @@ func _movimiento_jugador(delta: float) -> void:
 
 	anim_tree.set("parameters/State/blend_position", _vector2)
 
-
 func _salto_jugador():
-	if Input.is_action_just_pressed("salto") and is_on_floor():
+	if Input.is_action_just_pressed("salto") and is_on_floor() and not is_dead:
 		Jumping = true
 		anim_playback.travel("Jump")
 		velocity.y = fuerza_salto
 		await get_tree().create_timer(1.4).timeout
-		anim_playback.travel("State")
-		
-
-func _detectar_suelo_raycast():
-	ray_suelo.force_raycast_update()
-	#print("piso detectado")
-
-	if is_on_floor_only() and ray_suelo.is_colliding():
 		Jumping = false
 		anim_playback.travel("State")
 
+func _detectar_suelo_raycast():
+	if is_dead:
+		return
+	
+	ray_suelo.force_raycast_update()
+
+	if is_on_floor_only() and ray_suelo.is_colliding():
+		Jumping = false
+		if not is_attacking and not __rolling:
+			anim_playback.travel("State")
+
 func _input(event: InputEvent) -> void:
+	if is_dead:
+		return
+	
 	if event is InputEventMouseMotion:
 		rotate_y(deg_to_rad(-event.relative.x * sensibilidad_camara))
 		pivote.rotate_z(deg_to_rad(-event.relative.y * sensibilidad_camara))
@@ -110,32 +125,60 @@ func _input(event: InputEvent) -> void:
 	elif event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			_camara.position.x += 0.1 
-			_camara.position.x = clamp(_camara.position.x, 1.0, 0.9)
+			_camara.position.x = clamp(_camara.position.x, -0.5, 1.0)
 		if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			_camara.position.x -= 0.1 
-			_camara.position.x = clamp(_camara.position.x, 1.0, -0.5)
-	elif _camara.global_position==pivote.global_position:
+			_camara.position.x = clamp(_camara.position.x, -0.5, 1.0)
+	
+	if Input.is_action_just_pressed("attack") and not is_attacking and not is_dead:
+		is_attacking = true
+		anim_playback.travel("Attack")
+		await get_tree().create_timer(0.5).timeout  # Ajusta este tiempo según tu animación
+		is_attacking = false
+		if not is_dead:
+			anim_playback.travel("State")
+	if _camara.global_position==pivote.global_position:
 		_camara.position.x=0
-		pivote.rotate_z(deg_to_rad(-event.relative.y * sensibilidad_camara))
-		
-		pivote.rotation.x = clamp(pivote.rotation.x, deg_to_rad(0), deg_to_rad(0))
-		pivote.rotation.z = clamp(pivote.rotation.z, deg_to_rad(0), deg_to_rad(0))
-		pivote.rotation.y = clamp(pivote.rotation.y, deg_to_rad(0), deg_to_rad(0))
-
-func deal_damage() ->void:
-	golpe_conectado.emit(damage_amount)
 	
 
+func deal_damage() -> void:
+	if not is_dead:
+		golpe_conectado.emit(damage_amount)
 
 func _on_attack_area_body_entered(body):
-	if body.is_in_group("enemy"): 
+	if body.is_in_group("enemy") and not is_dead: 
 		print("¡GOLPE CONECTADO! Aplicando daño")
-		health -=damage_amount
-		print(health)
-	if health<=0:
-		queue_free()
-		get_tree().reload_current_scene()
+		health -= damage_amount
+		print("Vida actual: ", health)
+		
+		if health <= 0:
+			is_dead = true
+			dead_signal.emit(is_dead)
+			print("Emitir señal \"muerto\"")
+			anim_playback.travel("Death")
+			wait_resert()
+		
 		if body.has_method("take_damage"):
-			body.take_damage(10.0)
-			
+			body.take_damage(damage_amount)
+
+func wait_resert() -> void:
+	await get_tree().create_timer(3.8).timeout
+	get_tree().reload_current_scene()
+
+func wait_start() -> void:
+	wait_to_star = true
+	await get_tree().create_timer(2.8).timeout
+	if not is_dead:
+		anim_playback.travel("Get_up")
+	wait_to_star = false
+func play_get_up_animation() -> void:
+	# Desactivar el movimiento temporalmente durante la animación
+	set_physics_process(false)
+	anim_playback.travel("Get_Up")
 	
+	# Esperar a que la animación termine (ajusta el tiempo según tu animación)
+	await get_tree().create_timer(2.8).timeout
+	
+	# Reactivar el movimiento
+	set_physics_process(true)
+	anim_playback.travel("State")

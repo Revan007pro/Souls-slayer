@@ -27,7 +27,6 @@ func recibir_daño(cantidad: int) -> void:
 	_salud_actual -= cantidad
 	if _salud_actual <= 0:
 		_salud_actual = 0
-		muerte()
 
 func recuperar_salud(cantidad: int) -> void:
 	_salud_actual += cantidad
@@ -71,9 +70,6 @@ func clase_mago() ->void:
 	_atributos["defensa"]=7
 	_atributos["suerte"]=10
 
-func muerte() -> void:
-	if _salud_actual<=0:
-		queue_free()
 
 func _aplicar_gravedad(delta:float) -> void:
 	if not is_on_floor():
