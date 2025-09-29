@@ -1,7 +1,30 @@
-
+# Ignorar todo por defecto
 *
-!*.tscn
-scripts/maricasdas.gd
+
+# PERO incluir estos directorios y sus contenidos
 !scripts/
-!scripts/*.gd
+!*.gd
+!*.tscn
+!*.tres
+!project.godot
 !.gitignore
+!README.md
+!*.txt
+
+# Ignorar archivos específicos que no quieres
+scripts/maricasdas.gd
+
+# Godot específico
+.godot/
+*.import
+export.cfg
+export_presets.cfg
+
+# Archivos temporales
+*.tmp
+*.bak
+~*
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
