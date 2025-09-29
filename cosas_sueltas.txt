@@ -1,0 +1,8 @@
+func _on_golpe_conectado(damage:float) ->void:
+	print("golpe asestado con: ", damage, "de daño")
+	attack_area
+	var bodies = attack_area.get_overlapping_bodies()
+	for body in bodies:
+		if body.has_method("take_damage") and body != self:
+			body.take_damage(damage)
+

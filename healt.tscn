@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6vrdgxpuou7p"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_04rwr"]
+bg_color = Color(0.7943987, 2.2621452e-06, 0, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aessj"]
+bg_color = Color(0.35952562, 0.6978941, 0.13621828, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
+
+[node name="healt" type="ProgressBar"]
+offset_left = 164.0
+offset_top = 82.0
+offset_right = 417.0
+offset_bottom = 109.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_04rwr")
+value = 100.0
+show_percentage = false
+
+[node name="Stamina" type="ProgressBar" parent="."]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 31.0
+offset_right = 208.0
+offset_bottom = 58.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_aessj")
+value = 100.0
+show_percentage = false

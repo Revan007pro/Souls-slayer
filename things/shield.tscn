@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://i7ogsbm607ae"]
+
+[ext_resource type="PackedScene" uid="uid://dvxht4vuiixmu" path="res://things/shield.fbx" id="1_e41ea"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_y0lv0"]
+size = Vector3(0.123657, 1, 0.776917)
+
+[node name="shield" instance=ExtResource("1_e41ea")]
+
+[node name="Area3D" type="Area3D" parent="." index="1"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.000427246, 0, -0.00650024)
+shape = SubResource("BoxShape3D_y0lv0")

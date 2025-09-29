@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://6pxpnw4gp74p"]
+
+[ext_resource type="PackedScene" uid="uid://c6ng24oxbsal0" path="res://Charapteres/Paladin WProp J Nordstrom.fbx" id="1_ojmd0"]
+[ext_resource type="PackedScene" uid="uid://0txee0f88wos" path="res://sword.tscn" id="2_dmax4"]
+
+[node name="Paladin WProp J Nordstrom" instance=ExtResource("1_ojmd0")]
+
+[node name="Paladin_J_Nordstrom" parent="Skeleton3D" index="3"]
+visible = false
+
+[node name="BoneAttachment3D" type="BoneAttachment3D" parent="Skeleton3D" index="4"]
+transform = Transform3D(0.01746037, -0.99984735, 9.532198e-06, 8.592979e-08, -9.576861e-06, -0.9999998, 0.9998473, 0.017460361, -8.2375344e-08, -0.75428057, 1.4490315, -0.021889629)
+bone_name = "mixamorig_RightHandIndex1"
+bone_idx = 42
+
+[node name="Sword" parent="Skeleton3D/BoneAttachment3D" index="0" instance=ExtResource("2_dmax4")]
+transform = Transform3D(0.03886602, -0.10053565, 0.9941748, 0.021821272, -0.99460375, -0.10143208, 0.9990068, 0.025636286, -0.036462467, 0.31924972, 0.005575359, 0.03267467)
+damage_amount = 10.0

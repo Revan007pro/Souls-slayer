@@ -1,5 +1,6 @@
-# Ignora TODO excepto los scripts .gd y el propio .gitignore
+
 *
+!*.tscn
 scripts/maricasdas.gd
 !scripts/
 !scripts/*.gd

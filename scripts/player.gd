@@ -1,4 +1,3 @@
-# Archivo: player.gd
 extends Personaje
 
 class_name player
@@ -7,22 +6,24 @@ class_name player
 @export var acceleration: float = 75.0
 @export var fuerza_salto: float = 4.5
 @export var _enemy:CharacterBody3D
+@export var _sword: PackedScene
+var _sword_instance: Node3D
 
 @onready var pivote: Node3D = $Pivote
 @onready var anim_tree: AnimationTree = $AnimationTree
 @onready var _camara: Camera3D = $Pivote/Camera3D
 @onready var ray_suelo: RayCast3D = $RayCast3D
-@onready var _salud: ProgressBar = $Pivote/Camera3D/Sprite3D/SubViewport/Healts
+@onready var _salud: ProgressBar = $"../CanvasLayer/healt"
+
 
 signal golpe_conectado(damage: float)
 signal dead_signal(is_dead: bool)
-signal conectar_golpe(damage:float)
+
 
 var health: float = 100.0
 var rotacion_horizontal: float = 0.0
 var rotacion_vertical: float = 0.0
 var anim_playback: AnimationNodeStateMachinePlayback
-var damage_amount: float = 10.0
 var is_first_spawn: bool = true
 
 
@@ -44,12 +45,8 @@ func _ready() -> void:
 	anim_tree.active = true
 	add_to_group("player")
 	anim_playback = anim_tree.get("parameters/playback")
-	wait_start()
-	$AttackArea.body_entered.connect(_on_attack_area_body_entered)
 	call_deferred("_deferred_ready")
-
 func _deferred_ready() -> void:
-	# Reproducir animación de levantarse solo al inicio
 	if is_first_spawn:
 		play_get_up_animation()
 		is_first_spawn = false
@@ -59,8 +56,7 @@ func _deferred_ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	if is_dead:
-		return  # Si está muerto, no procesar movimiento ni otras acciones
-	
+		return  
 	_movimiento_jugador(delta)
 	_aplicar_gravedad(delta)
 	_salto_jugador()
@@ -97,8 +93,12 @@ func _movimiento_jugador(delta: float) -> void:
 
 	anim_tree.set("parameters/State/blend_position", _vector2)
 
+func puede_saltar()->void:
+	await get_tree().create_timer(2.5).timeout
+
 func _salto_jugador():
 	if Input.is_action_just_pressed("salto") and is_on_floor() and not is_dead:
+		puede_saltar()
 		Jumping = true
 		anim_playback.travel("Jump")
 		velocity.y = fuerza_salto
@@ -141,6 +141,8 @@ func _input(event: InputEvent) -> void:
 		anim_playback.travel("Attack")
 		await get_tree().create_timer(0.5).timeout  # Ajusta este tiempo según tu animación
 		is_attacking = false
+		if _sword_instance and _sword_instance.has_method("activate_sword"):
+			_sword_instance.activate_sword()
 		if not is_dead:
 			anim_playback.travel("State")
 	elif Input.is_action_just_pressed("fijar"):
@@ -148,47 +150,44 @@ func _input(event: InputEvent) -> void:
 	if _camara.global_position==pivote.global_position:
 		_camara.position.x=0
 	
-func deal_damage() -> void:
-	if not is_dead:
-		golpe_conectado.emit(damage_amount)
-		conectar_golpe.emit(damage_amount)
-
-func _on_attack_area_body_entered(body):
-	if body.is_in_group("enemy") and not is_dead:
-		print("¡GOLPE CONECTADO! Aplicando daño al enemigo")
-		
-		# Solo esta línea necesita cambiar - verificar que tenga take_damage
-		if body.has_method("take_damage"):
-			body.take_damage(damage_amount)
-		
-		health -= damage_amount  # ← Esta línea se mantiene igual
-		
-		if _salud:
-			self._salud.value = health
-			self._salud.max_value = 100.0
-		
-		print("Vida actual: ", health)
-		
-		if health <= 0:
-			is_dead = true
-			dead_signal.emit(is_dead)
-			print("Emitir señal \"muerto\"")
-			anim_playback.travel("Death")
-			wait_resert()
-func wait_resert() -> void:
-	get_tree().reload_current_scene()
-
-
-func wait_start() -> void:
-	wait_to_star = true
-	await get_tree().create_timer(2.8).timeout
-	if not is_dead:
-		anim_playback.travel("Get_up")
-	wait_to_star = false
 func play_get_up_animation() -> void:
 	set_physics_process(false)
-	anim_playback.travel("Get_Up")
+	anim_playback.travel("Get_up")
 	await get_tree().create_timer(2.8).timeout
 	
 	set_physics_process(true)
 	anim_playback.travel("State")
+
+
+func take_damage(damage: float) -> void:
+	# if _sword:
+	#     _sword_instance=_sword.instantiate()
+	#     add_child(_sword_instance)
+	#     if _sword_instance.has_signal("conectar_golpe"):
+	#         print("Señal de espada conectada")
+	#         _sword_instance.conectar_golpe.connect()
+	# if _sword_instance.conectar_golpe.connect: # ESTA LÍNEA ES EL PROBLEMA PRINCIPAL
+	#     self.health -=damage
+	# --- FIN DEL BLOQUE A CORREGIR ---
+
+	self.health -= damage
+
+	if is_dead: 
+		return
+
+	if health <= 0:
+		is_dead = true
+		dead_signal.emit(is_dead)
+		print("Emitir señal \"muerto\"")
+		wait_to_star = true
+		anim_playback.travel("Dead")
+		await get_tree().create_timer(2.8).timeout
+		get_tree().reload_current_scene()
+		if not is_dead: 
+			anim_playback.travel("Get_up")
+		return 
+	if _salud:
+		self._salud.value = health
+		self._salud.max_value = 100.0
+
+	wait_to_star = false 
