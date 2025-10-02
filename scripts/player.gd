@@ -14,9 +14,8 @@ var _sword_instance: Node3D
 @onready var _camara: Camera3D = $Pivote/Camera3D
 @onready var ray_suelo: RayCast3D = $RayCast3D
 @onready var _salud: ProgressBar = $"../CanvasLayer/healt"
+@onready var death_sound: AudioStreamPlayer3D = $death_sound
 
-
-signal golpe_conectado(damage: float)
 signal dead_signal(is_dead: bool)
 
 
@@ -25,6 +24,7 @@ var rotacion_horizontal: float = 0.0
 var rotacion_vertical: float = 0.0
 var anim_playback: AnimationNodeStateMachinePlayback
 var is_first_spawn: bool = true
+
 
 
 var _vector2: Vector2 = Vector2.ZERO
@@ -141,8 +141,6 @@ func _input(event: InputEvent) -> void:
 		anim_playback.travel("Attack")
 		await get_tree().create_timer(0.5).timeout  # Ajusta este tiempo según tu animación
 		is_attacking = false
-		if _sword_instance and _sword_instance.has_method("activate_sword"):
-			_sword_instance.activate_sword()
 		if not is_dead:
 			anim_playback.travel("State")
 	elif Input.is_action_just_pressed("fijar"):
@@ -160,22 +158,23 @@ func play_get_up_animation() -> void:
 
 
 func take_damage(damage: float) -> void:
-	# if _sword:
-	#     _sword_instance=_sword.instantiate()
-	#     add_child(_sword_instance)
-	#     if _sword_instance.has_signal("conectar_golpe"):
-	#         print("Señal de espada conectada")
-	#         _sword_instance.conectar_golpe.connect()
-	# if _sword_instance.conectar_golpe.connect: # ESTA LÍNEA ES EL PROBLEMA PRINCIPAL
-	#     self.health -=damage
-	# --- FIN DEL BLOQUE A CORREGIR ---
+	#if _sword:
+	#	_sword_instance=_sword.instantiate()
+	#	add_child(_sword_instance)
+	#	if _sword_instance.has_signal("conectar_golpe"):
+	#		print("Señal de espada conectada \"error")
+	#		_sword_instance.conectar_golpe.connect() 
+	#if _sword_instance.has_method("activate_sword"):
+	#	print("ponete a estudiar mejor")
 
 	self.health -= damage
-
+		
+	
 	if is_dead: 
 		return
 
 	if health <= 0:
+		death_sound.play()
 		is_dead = true
 		dead_signal.emit(is_dead)
 		print("Emitir señal \"muerto\"")
@@ -189,5 +188,3 @@ func take_damage(damage: float) -> void:
 	if _salud:
 		self._salud.value = health
 		self._salud.max_value = 100.0
-
-	wait_to_star = false 

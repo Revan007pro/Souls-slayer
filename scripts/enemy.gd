@@ -11,7 +11,6 @@ class_name enemy
 @export var _player: CharacterBody3D 
 var attack_timer: float = 0.0
 @export var attack_cooldown: float = 1.5
-var _dead:float=0
 
 @onready var nav_agent = $NavigationAgent3D
 @onready var _salud: ProgressBar = $Sprite3D/SubViewport/healt
@@ -25,10 +24,10 @@ var _hevy:bool=false
 var _ataque_fuerte:float=7.5
 var is_dead:bool
 var State:bool
+var _damage_:bool
 signal golpe_conectado(damage: float)
 signal dead_signal(is_dead:bool)
 var health: float = 100
-@onready var attack_area: Area3D = $AttackArea
 
 
 # Variables de estado
@@ -46,7 +45,6 @@ func _ready():
 	anim_tree.active = true
 	anim_playback = anim_tree.get("parameters/playback")
 	add_to_group("enemy")
-	attack_area.monitoring = false   # <<< IMPORTANTE: apagado por defecto
 
 func _physics_process(delta):
 	if is_dead:
@@ -123,10 +121,8 @@ func comportamiento_enemigo(delta) -> void:
 			
 			if not is_attacking:
 				is_attacking = true
-				attack_area.monitoring = true   # <<< SOLO aquí se enciende
 				anim_playback.travel("Attack")
 				await get_tree().create_timer(1.0).timeout
-				attack_area.monitoring = false  # <<< se apaga después
 				is_attacking = false
 
 			if distan_heavy:
@@ -153,13 +149,16 @@ func _rotate_to_target(direction: Vector3, delta: float):
 
 func _muerte_propia() ->void:
 	anim_playback.travel("Dead")
-	await get_tree().create_timer(5.2).timeout
+	await get_tree().create_timer(8.2).timeout
 	self.queue_free()
 	
 
 func take_damage(damage: float) -> void:
+	_damage_=true
+	anim_playback.travel("Damage")
 	if is_dead:
 		return
+	
 	health -= damage
 	if _salud:
 		self._salud.value = health
@@ -173,4 +172,3 @@ func take_damage(damage: float) -> void:
 		dead_signal.emit(is_dead)
 		print("Emitir señal \"muerto\"")
 		_muerte_propia()
-

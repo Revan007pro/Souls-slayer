@@ -19,6 +19,7 @@ scripts/maricasdas.gd
 *.import
 export.cfg
 export_presets.cfg
+.gitattributes
 
 # Archivos temporales
 *.tmp

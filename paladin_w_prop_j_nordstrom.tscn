@@ -5,14 +5,40 @@
 
 [node name="Paladin WProp J Nordstrom" instance=ExtResource("1_ojmd0")]
 
+[node name="Skeleton3D" parent="." index="0"]
+bones/0/position = Vector3(0.00034291213, 0.9557879, 0.0050036497)
+bones/11/rotation = Quaternion(2.9802322e-08, -2.9802322e-08, -2.9802322e-08, 1)
+bones/12/rotation = Quaternion(-4.078775e-08, 0.00013749299, -6.160773e-08, 1)
+bones/13/rotation = Quaternion(0.218566, 0.0716629, 0.2548152, 0.93923515)
+bones/15/rotation = Quaternion(-6.952718e-08, 6.545494e-08, -2.432193e-08, 1)
+bones/23/rotation = Quaternion(1.6216062e-07, 2.978579e-08, 1.5312624e-08, 1)
+bones/34/rotation = Quaternion(0.5322535, -0.46566588, 0.5311275, 0.46665317)
+bones/36/rotation = Quaternion(2.6861676e-07, 2.9802266e-08, -3.3527634e-08, 1)
+bones/37/rotation = Quaternion(-8.9418464e-08, -0.00012867151, -8.941846e-08, 1)
+bones/38/rotation = Quaternion(0.21933877, -0.068828516, -0.25415048, 0.93944705)
+bones/40/rotation = Quaternion(-2.7292484e-07, -1.1679949e-08, 3.8728512e-08, 1)
+bones/43/rotation = Quaternion(-5.023276e-07, 2.9844813e-08, 1.169447e-07, 1)
+bones/44/rotation = Quaternion(-7.128997e-08, -2.9831824e-08, -1.278689e-07, 1)
+bones/47/rotation = Quaternion(-8.1057806e-08, -3.941948e-11, -2.930883e-07, 1)
+bones/48/rotation = Quaternion(2.8703295e-07, -2.984967e-08, 3.0152964e-07, 1)
+bones/51/rotation = Quaternion(2.7776605e-07, -9.853929e-11, 6.77901e-08, 1)
+bones/55/rotation = Quaternion(4.3834018e-07, -5.8804524e-12, 2.5543522e-07, 1)
+bones/56/rotation = Quaternion(-3.5125507e-07, 8.9412524e-08, -1.9234895e-08, 1)
+bones/59/rotation = Quaternion(-2.953087e-10, 0.0074008484, 0.9999727, 6.559008e-07)
+bones/60/rotation = Quaternion(-0.049258508, 5.9410227e-10, 1.07253e-10, 0.99878615)
+bones/61/rotation = Quaternion(0.4449569, 0.021962667, -0.027748553, 0.8948525)
+bones/64/rotation = Quaternion(1.9650773e-10, 0.0074027707, 0.99997264, 6.686916e-07)
+bones/65/rotation = Quaternion(-0.04926372, -1.4796605e-08, 1.7232762e-10, 0.9987858)
+bones/66/rotation = Quaternion(0.4449589, -0.021961711, 0.027749375, 0.8948515)
+
 [node name="Paladin_J_Nordstrom" parent="Skeleton3D" index="3"]
 visible = false
 
 [node name="BoneAttachment3D" type="BoneAttachment3D" parent="Skeleton3D" index="4"]
-transform = Transform3D(0.01746037, -0.99984735, 9.532198e-06, 8.592979e-08, -9.576861e-06, -0.9999998, 0.9998473, 0.017460361, -8.2375344e-08, -0.75428057, 1.4490315, -0.021889629)
+transform = Transform3D(8.247624e-06, -0.9999999, -6.6937326e-05, -0.00025699203, 6.696501e-05, -0.99999976, 0.99999964, 8.282892e-06, -0.00025692032, -0.7547383, 1.4490724, -0.0270408)
 bone_name = "mixamorig_RightHandIndex1"
 bone_idx = 42
 
 [node name="Sword" parent="Skeleton3D/BoneAttachment3D" index="0" instance=ExtResource("2_dmax4")]
 transform = Transform3D(0.03886602, -0.10053565, 0.9941748, 0.021821272, -0.99460375, -0.10143208, 0.9990068, 0.025636286, -0.036462467, 0.31924972, 0.005575359, 0.03267467)
-damage_amount = 10.0
+visible = true

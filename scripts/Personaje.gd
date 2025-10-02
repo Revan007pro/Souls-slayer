@@ -78,5 +78,6 @@ func _aplicar_gravedad(delta:float) -> void:
 		velocity.y=0
 
 
+
 #@export var owner_node: Node = null 
 
