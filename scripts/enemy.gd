@@ -8,7 +8,8 @@ class_name enemy
 @export var stopping_distance: float = 1.5
 @export var tiempo_maximo_rutina: float = 4.0
 @export var rango_movimiento_aleatorio: float = 5.0
-@export var _player: CharacterBody3D 
+@export var _player: PackedScene 
+var _player_instance: Node
 var attack_timer: float = 0.0
 @export var attack_cooldown: float = 1.5
 
@@ -40,6 +41,7 @@ var distan_heavy:float=4.5
 
 
 func _ready():
+	_player_instance = _player.instantiate()
 	_cronometro = tiempo_maximo_rutina
 	clase_mago()
 	anim_tree.active = true
@@ -59,11 +61,11 @@ func _physics_process(delta):
 
 func comportamiento_enemigo(delta) -> void:
 	var distance_to_target = 0.0
-	if _player:
-		distance_to_target = global_position.distance_to(_player.global_position)
+	if _player_instance:  # Usamos _player_instance en lugar de _player
+		distance_to_target = global_position.distance_to(_player_instance.global_position)
 
 	# Lógica de cambio de estado (transiciones)
-	if player_is_dead or not _player:
+	if player_is_dead or not _player_instance:  # Cambiar _player a _player_instance
 		_rutina = 2
 	else:
 		if distance_to_target <= stopping_distance:
@@ -87,7 +89,7 @@ func comportamiento_enemigo(delta) -> void:
 		
 		1:
 			is_moving = true
-			nav_agent.target_position = _player.global_position
+			nav_agent.target_position = _player_instance.global_position  # Usamos _player_instance
 			var next_pos = nav_agent.get_next_path_position()
 			var direction = (next_pos - global_position).normalized()
 			velocity = direction * speed
@@ -116,7 +118,7 @@ func comportamiento_enemigo(delta) -> void:
 
 		3:
 			is_moving = false
-			look_at(_player.global_position, Vector3.UP)
+			look_at(_player_instance.global_position, Vector3.UP)  # Usamos _player_instance
 			velocity = Vector3.ZERO
 			
 			if not is_attacking:
@@ -127,20 +129,21 @@ func comportamiento_enemigo(delta) -> void:
 
 			if distan_heavy:
 				is_moving = false
-				look_at(_player.global_position, Vector3.UP)
+				look_at(_player_instance.global_position, Vector3.UP)  # Usamos _player_instance
 				velocity = Vector3.ZERO
 				#anim_playback.travel("Hevy")
 
 				is_attacking = false
 				
 				# Vuelve a evaluar el estado después de atacar
-				var distance_after_attack = global_position.distance_to(_player.global_position)
+				var distance_after_attack = global_position.distance_to(_player_instance.global_position)  # Usamos _player_instance
 				if distance_after_attack <= stopping_distance:
 					_rutina = 3 # Atacar de nuevo
 				elif distance_after_attack <= detection_range:
 					_rutina = 1
 				else:
 					_rutina = 0
+
 			
 func _rotate_to_target(direction: Vector3, delta: float):
 	var target_angle = atan2(direction.x, direction.z)

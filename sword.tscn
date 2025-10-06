@@ -6,7 +6,7 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_e4ynd"]
 size = Vector3(0.027282715, 0.014221191, 0.45507813)
 
-[node name="Sword" groups=["Arma", "Player", "enemy"] instance=ExtResource("1_e4ynd")]
+[node name="Sword" groups=["Arma"] instance=ExtResource("1_e4ynd")]
 script = ExtResource("2_r76a6")
 
 [node name="AttackArea" type="Area3D" parent="." index="1"]
@@ -14,3 +14,5 @@ script = ExtResource("2_r76a6")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea" index="0"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00033569336, 0.0023633242, 0.25371128)
 shape = SubResource("BoxShape3D_e4ynd")
+
+[connection signal="conectar_golpe" from="." to="." method="_on_conectar_golpe"]

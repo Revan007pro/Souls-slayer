@@ -3,7 +3,7 @@
 [ext_resource type="PackedScene" uid="uid://c6ng24oxbsal0" path="res://Charapteres/Paladin WProp J Nordstrom.fbx" id="1_ojmd0"]
 [ext_resource type="PackedScene" uid="uid://0txee0f88wos" path="res://sword.tscn" id="2_dmax4"]
 
-[node name="Paladin WProp J Nordstrom" instance=ExtResource("1_ojmd0")]
+[node name="a_eliminar" instance=ExtResource("1_ojmd0")]
 
 [node name="Skeleton3D" parent="." index="0"]
 bones/0/position = Vector3(0.00034291213, 0.9557879, 0.0050036497)
@@ -41,4 +41,3 @@ bone_idx = 42
 
 [node name="Sword" parent="Skeleton3D/BoneAttachment3D" index="0" instance=ExtResource("2_dmax4")]
 transform = Transform3D(0.03886602, -0.10053565, 0.9941748, 0.021821272, -0.99460375, -0.10143208, 0.9990068, 0.025636286, -0.036462467, 0.31924972, 0.005575359, 0.03267467)
-visible = true

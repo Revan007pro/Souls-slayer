@@ -18,3 +18,4 @@ func _on_attack_area_body_entered(body: Node):
 	
 func activate_sword():
 	attack_area.monitoring = true
+
