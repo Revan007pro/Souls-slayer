@@ -35,7 +35,8 @@ var can_jump: bool = true
 var __rolling: bool = false
 var attack_radio: float = 1.0
 var _damage_: bool
-var _desvainar: bool
+var _desvainar: bool=false
+var _desvainar_with:bool=false
 var is_dead: bool = false
 var is_attacking: bool = false
 
@@ -69,8 +70,10 @@ func _physics_process(delta: float) -> void:
 	_movimiento_jugador(delta)
 	_aplicar_gravedad(delta)
 	_salto_jugador()
+	is_attaacking()
 	_desvainar_espada()
 	_bloquear()
+	_regenerar_stamina()
 	move_and_slide()
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
@@ -95,14 +98,27 @@ func _movimiento_jugador(delta: float) -> void:
 		_vector2 = Vector2.ZERO
 
 	anim_tree.set("parameters/State/blend_position", _vector2)
-func _desvainar_espada()->void:
+func _desvainar_espada() -> void:
 	if Input.is_action_just_pressed("desvainar"):
+		if !_desvainar:  # Si la espada no está desvainada
 			_desvainar = true
 			anim_playback.travel("Ani_player_Desvainar")
-			print("animacion desvainar")
-			await get_tree().create_timer(1.6).timeout
+			print("Animación desvainar")
+			await get_tree().create_timer(1.6).timeout  # Espera que termine la animación de desvainar
+			_desvainar_with = true
+			anim_playback.travel("With")
+			
+			print("Espada desvainada")
+		elif _desvainar_with:  
+			anim_playback.travel("Ani_player_Envainar")
+			print("Animación envainar")
+			await get_tree().create_timer(1.6).timeout  
 			_desvainar = false
-			anim_playback.travel("State") 
+			_desvainar_with = false
+			anim_playback.travel("State")
+			print("Espada envainada")
+	anim_tree.set("parameters/With/blend_position", _vector2)
+
 func _bloquear()->void:
 	while Input.is_action_just_pressed("block"):
 		_desvainar=true
@@ -120,6 +136,7 @@ func _salto_jugador() :
 			return
 		self._stamina.value -=can_jump
 		self._stamina.max_value=100
+		
 		Jumping = true
 		print("salto")
 		anim_playback.travel("Ani_player_Jump")
@@ -151,25 +168,28 @@ func _input(event: InputEvent) -> void:
 		if _camara.global_position == pivote.global_position:
 			_camara.position.z = 0
 	
-	if Input.is_action_just_pressed("attack") and _desvainar == true:
-		var can_attack: int = 100  
-		if _stamina.value < can_attack:
-			print("Sin stamina, no puedes atacar")
-			return
-		is_attacking = true
-		_stamina.value -= can_attack
-		_stamina.max_value = 100  
-		anim_playback.travel("Ani_player_Attack")
-		
-		await get_tree().create_timer(0.5).timeout
-		
-		is_attacking = false
-		if not is_dead:
-			anim_playback.travel("State")
 
 	elif Input.is_action_just_pressed("fijar"):
 		if _enemigo_instancia:
 			_camara.look_at(_enemigo_instancia.global_position)
+
+func is_attaacking()->void:
+	if Input.is_action_just_pressed("attack") and _desvainar == true:
+		var can_attack: int = 30 
+		if _stamina.value < can_attack:
+			print("Sin stamina, no puedes atacar")
+			return
+		is_attacking = true
+		self._stamina.value -= can_attack
+		self._stamina.max_value = 100  
+		anim_playback.travel("Ani_player_Attack")
+		
+		await get_tree().create_timer(1.6667).timeout
+		
+		is_attacking = false
+		if not is_dead:
+			anim_playback.travel("With")
+
 
 	
 func play_get_up_animation() -> void:
@@ -216,5 +236,15 @@ func take_damage(damage: float) -> void:
 		self._salud.value = health
 		self._salud.max_value = 100.0
 
-func _render_sword()->void:
-	pass
+func _regenerar_stamina()->void:
+	var stamina_mas:int=10
+	while _stamina.value < 100 and is_on_floor():
+		await get_tree().create_timer(2.8).timeout
+		self._stamina.value +=stamina_mas
+		break
+	
+	
+
+
+func _on_dead_signal(is_dead: bool) -> void:
+	pass # Replace with function body.

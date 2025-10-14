@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://bd5yprjvgjfqq"]
+[gd_scene load_steps=12 format=3 uid="uid://bd5yprjvgjfqq"]
 
 [ext_resource type="PackedScene" uid="uid://eri7lkn1barl" path="res://Medieval Village MegaKit[Standard]/FBX/Floor_RedBrick.fbx" id="1_aqk2v"]
 [ext_resource type="PackedScene" uid="uid://0txee0f88wos" path="res://sword.tscn" id="1_pkg7o"]
 [ext_resource type="PackedScene" uid="uid://chol2xlfbq7cu" path="res://demo/Demo.tscn" id="4_036b0"]
 [ext_resource type="PackedScene" uid="uid://dl0wxmfcihyvx" path="res://player_escena.tscn" id="4_aqk2v"]
 [ext_resource type="PackedScene" uid="uid://duuld4xrh2har" path="res://Charapteres/enemigo_escena.tscn" id="5_dwbse"]
+[ext_resource type="PackedScene" uid="uid://maxbx2hoab5o" path="res://Charapteres/Rudeus.tscn" id="6_dwbse"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gbfbk"]
 sky_top_color = Color(0.16615832, 0.46546823, 0.7192073, 1)
@@ -303,3 +304,6 @@ script = null
 
 [node name="enemy" parent="." instance=ExtResource("5_dwbse")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.397869, 1.2531118, -0.17706108)
+
+[node name="Node3D" parent="." instance=ExtResource("6_dwbse")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.2475624, 0.034024537, 1.0590581)

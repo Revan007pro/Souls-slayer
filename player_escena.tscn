@@ -7,12 +7,12 @@
 [ext_resource type="PackedScene" uid="uid://di7dk6s4w6n6s" path="res://fbx/goblin_fbx.tscn" id="5_2les7"]
 [ext_resource type="AudioStream" uid="uid://crtuc0q8od1p3" path="res://sonidos/sanido_muerte.mp3" id="5_xe1mq"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_xe1mq"]
-size = Vector3(0.06968689, 0.166996, 0.114746094)
-
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_far6r"]
-radius = 0.08105469
-height = 0.43417358
+radius = 0.052734375
+height = 0.524353
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_far6r"]
+size = Vector3(0.042816162, 0.24234772, 0.06402588)
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_wvlaw")
@@ -38,13 +38,15 @@ transform = Transform3D(-0.98869103, 0, 0.14996666, 0, 1, 0, -0.14996666, 0, -0.
 stream = ExtResource("5_xe1mq")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." groups=["Player"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.08553314, 0.13157082, -0.02709961)
-shape = SubResource("BoxShape3D_xe1mq")
-
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="." groups=["Player"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.095574886, 0.19065094, -0.02709961)
-shape = SubResource("BoxShape3D_xe1mq")
-
-[node name="CollisionShape3D3" type="CollisionShape3D" parent="." groups=["Player"]]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75281, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7378235, 0)
 shape = SubResource("CapsuleShape3D_far6r")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.123166636, 0.12051448, -0.043078244)
+shape = SubResource("BoxShape3D_far6r")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11606717, 0.12051448, -0.043078244)
+shape = SubResource("BoxShape3D_far6r")
+
+[connection signal="dead_signal" from="." to="." method="_on_dead_signal"]
