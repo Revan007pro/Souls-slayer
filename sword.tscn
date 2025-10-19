@@ -1,10 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://0txee0f88wos"]
+[gd_scene load_steps=5 format=3 uid="uid://0txee0f88wos"]
 
 [ext_resource type="PackedScene" uid="uid://da1mo5s33cugs" path="res://things/medieval+sword+3d+model.fbx" id="1_e4ynd"]
 [ext_resource type="Script" uid="uid://dirc0wmto415r" path="res://scripts/Sword_script.gd" id="2_r76a6"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_e4ynd"]
 size = Vector3(0.027282715, 0.014221191, 0.45507813)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_e4ynd"]
+radius = 0.64018977
 
 [node name="Sword" groups=["Arma"] instance=ExtResource("1_e4ynd")]
 script = ExtResource("2_r76a6")
@@ -15,4 +18,10 @@ script = ExtResource("2_r76a6")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00033569336, 0.0023633242, 0.25371128)
 shape = SubResource("BoxShape3D_e4ynd")
 
+[node name="Area3D" type="Area3D" parent="." index="2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0" groups=["Arma"]]
+shape = SubResource("SphereShape3D_e4ynd")
+
 [connection signal="conectar_golpe" from="." to="." method="_on_conectar_golpe"]
+[connection signal="area_entered" from="Area3D" to="." method="_on_area_3d_area_entered"]

@@ -25,7 +25,7 @@ runtime/balloon_path="res://Dialogue//balloon.tscn"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg", "res://addons/godot_rl_agents/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
+enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg", "res://addons/godot_rl_agents/plugin.cfg")
 
 [global_group]
 
@@ -92,4 +92,4 @@ Dialogue={
 
 [internationalization]
 
-locale/translations_pot_files=PackedStringArray("res://dialogues_pruebas/hunt.dialogue")
+locale/translations_pot_files=PackedStringArray("res://dialogues_pruebas/hunt.dialogue", "res://dialogues_pruebas/Agregar.dialogue")

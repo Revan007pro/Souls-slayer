@@ -3,10 +3,11 @@ extends Node3D
 @onready var attack_area: Area3D = $AttackArea
 @export var damage_amount: float = 10
 
+
 signal conectar_golpe(damage: float)
 
 func _ready():
-	attack_area.body_entered.connect(_on_attack_area_body_entered) 
+	attack_area.body_entered.connect(_on_attack_area_body_entered) 	
 
 func _on_attack_area_body_entered(body: Node):
 	if body.is_in_group("enemy") or body.is_in_group("player"):
@@ -18,4 +19,3 @@ func _on_attack_area_body_entered(body: Node):
 	
 func activate_sword():
 	attack_area.monitoring = true
-

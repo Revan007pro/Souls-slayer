@@ -47,6 +47,7 @@ func _ready():
 	_player_instance = get_tree().get_first_node_in_group("Player")
 	clase_guerrero()
 	anim_tree = enemigo_fbx.get_node("anim_tree") 
+	_salud.visible=false
 	if anim_tree:
 		anim_tree.active = true
 		anim_playback = anim_tree.get("parameters/playback")	
@@ -113,7 +114,7 @@ func comportamiento_enemigo(delta) -> void:
 				
 			var next_pos = nav_agent.get_next_path_position()
 			var direction = (next_pos - global_position).normalized()
-			#_rotate_to_target(-direction, delta)
+			_rotate_to_target(direction, delta)
 			velocity = direction * speed
 			
 			_vector2 = Vector2(0, 1) # Animación de caminar
@@ -167,6 +168,7 @@ func _muerte_propia() ->void:
 
 func take_damage(damage: float) -> void:
 	_damage_=true
+	_salud.visible=true
 	anim_playback.travel("ani_Damage")
 	if is_dead:
 		return

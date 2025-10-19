@@ -1,7 +1,6 @@
 [gd_scene load_steps=9 format=3 uid="uid://dl0wxmfcihyvx"]
 
 [ext_resource type="Script" uid="uid://m8m6msav2jrv" path="res://scripts/player.gd" id="1_wvlaw"]
-[ext_resource type="PackedScene" uid="uid://0txee0f88wos" path="res://sword.tscn" id="2_ob15f"]
 [ext_resource type="PackedScene" uid="uid://duuld4xrh2har" path="res://Charapteres/enemigo_escena.tscn" id="2_xe1mq"]
 [ext_resource type="PackedScene" uid="uid://b6vrdgxpuou7p" path="res://healt.tscn" id="4_2les7"]
 [ext_resource type="PackedScene" uid="uid://di7dk6s4w6n6s" path="res://fbx/goblin_fbx.tscn" id="5_2les7"]
@@ -14,11 +13,15 @@ height = 0.524353
 [sub_resource type="BoxShape3D" id="BoxShape3D_far6r"]
 size = Vector3(0.042816162, 0.24234772, 0.06402588)
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_2les7"]
+
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_wvlaw")
+speed = null
+acceleration = null
+fuerza_salto = null
 _enemy = ExtResource("2_xe1mq")
 _goblin_fbx = ExtResource("5_2les7")
-_sword = ExtResource("2_ob15f")
 
 [node name="Pivote" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.89827317, 0.01488772)
@@ -49,4 +52,11 @@ shape = SubResource("BoxShape3D_far6r")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11606717, 0.12051448, -0.043078244)
 shape = SubResource("BoxShape3D_far6r")
 
+[node name="Area3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("BoxShape3D_2les7")
+
 [connection signal="dead_signal" from="." to="." method="_on_dead_signal"]
+[connection signal="area_entered" from="Area3D" to="." method="_on_area_3d_area_entered"]
+[connection signal="area_exited" from="Area3D" to="." method="_on_area_3d_area_exited"]
