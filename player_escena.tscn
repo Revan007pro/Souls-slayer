@@ -14,12 +14,10 @@ height = 0.524353
 size = Vector3(0.042816162, 0.24234772, 0.06402588)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_2les7"]
+size = Vector3(1, 0.8982849, 0.48583984)
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_wvlaw")
-speed = null
-acceleration = null
-fuerza_salto = null
 _enemy = ExtResource("2_xe1mq")
 _goblin_fbx = ExtResource("5_2les7")
 
@@ -55,6 +53,7 @@ shape = SubResource("BoxShape3D_far6r")
 [node name="Area3D" type="Area3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55294347, 0.25708008)
 shape = SubResource("BoxShape3D_2les7")
 
 [connection signal="dead_signal" from="." to="." method="_on_dead_signal"]

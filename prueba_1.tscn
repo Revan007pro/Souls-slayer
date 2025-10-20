@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://bk1via4tlx0t4"]
+
+[ext_resource type="Script" uid="uid://h8oliiw65ee2" path="res://scripts/prueba_1.gd" id="1_8dtqf"]
+[ext_resource type="PackedScene" uid="uid://chol2xlfbq7cu" path="res://demo/Demo.tscn" id="2_8dtqf"]
+[ext_resource type="PackedScene" uid="uid://dl0wxmfcihyvx" path="res://player_escena.tscn" id="2_wp4uw"]
+
+[node name="Prueba_01" type="Node3D"]
+script = ExtResource("1_8dtqf")
+_player_instance = ExtResource("2_wp4uw")
+
+[node name="RespawnPoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.77470016, 0, 0)
+
+[node name="Demo" parent="RespawnPoint" instance=ExtResource("2_8dtqf")]
+script = null

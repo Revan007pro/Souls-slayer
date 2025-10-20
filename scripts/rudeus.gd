@@ -1,4 +1,4 @@
-extends CharacterBody3D
+extends Personaje
 
 var _player_instance:Node 
 const HUNT = preload("res://dialogues_pruebas/hunt.dialogue")  
@@ -6,6 +6,7 @@ var player_clase:bool=false
 
 @onready var dialog_area: Area3D = $Area3D  
 func _ready() -> void:
+	clase_mago()
 	_player_instance = get_tree().get_first_node_in_group("Player")
 
 func _process(delta: float) -> void:

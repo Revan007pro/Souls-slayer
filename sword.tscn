@@ -7,10 +7,14 @@
 size = Vector3(0.027282715, 0.014221191, 0.45507813)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_e4ynd"]
-radius = 0.64018977
+radius = 0.49012482
 
 [node name="Sword" groups=["Arma"] instance=ExtResource("1_e4ynd")]
+transform = Transform3D(1, 0, 0, 0, 0.72173977, 0, 0, 0, 0.66172475, 0, 0, 0)
 script = ExtResource("2_r76a6")
+
+[node name="tripo_node_a0dc263f" parent="." index="0"]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1.1949154, 0, 0, 0, 0)
 
 [node name="AttackArea" type="Area3D" parent="." index="1"]
 
@@ -21,6 +25,7 @@ shape = SubResource("BoxShape3D_e4ynd")
 [node name="Area3D" type="Area3D" parent="." index="2"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0" groups=["Arma"]]
+transform = Transform3D(1, 0, 0, 0, 1.2923632, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("SphereShape3D_e4ynd")
 
 [connection signal="conectar_golpe" from="." to="." method="_on_conectar_golpe"]

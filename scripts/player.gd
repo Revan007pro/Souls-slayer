@@ -11,6 +11,7 @@ class_name player
 
 var _sword_instance: Node3D
 var _goblin_instance: Node3D 
+var _arma_instancia =Node
 var anim_tree: AnimationTree  
 var bone_scene: BoneAttachment3D
 var _dialogue_balloon = null
@@ -51,12 +52,11 @@ var is_attacking: bool = false
 var wait_star: float = 2.8
 var wait_to_star: bool = false
 var _blocking: bool
-var _arma_instancia =Node
 
 var sensibilidad_camara: float = 0.5
 
 func _ready() -> void:
-
+	GameManager.register_player(self)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	add_to_group("player")
 	_arma_instancia = get_tree().get_first_node_in_group("Arma")
@@ -87,7 +87,8 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-	
+
+    
 
 func _movimiento_jugador(delta: float) -> void:
 	if is_dead:
@@ -280,3 +281,4 @@ func _on_area_3d_area_exited(area: Area3D) -> void:
 		_dialogue_balloon = null
 		_dialogue_active = false
 		print("Jugador salió del área, diálogo cerrado.")
+		
