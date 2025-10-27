@@ -34,8 +34,8 @@ var health: float = 100.0
 var rotacion_horizontal: float = 0.0
 var rotacion_vertical: float = 0.0
 var anim_playback: AnimationNodeStateMachinePlayback
-var is_first_spawn: bool = true
 var _camera_can_move:bool = true 
+var is_first_spawn: bool =true
 
 var _vector2: Vector2 = Vector2.ZERO
 var is_movieng: bool = false
@@ -56,7 +56,7 @@ var _blocking: bool
 var sensibilidad_camara: float = 0.5
 
 func _ready() -> void:
-	GameManager.register_player(self)
+	#GameManager._player_recurrente(self)
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	add_to_group("player")
 	_arma_instancia = get_tree().get_first_node_in_group("Arma")
@@ -66,14 +66,11 @@ func _ready() -> void:
 	bone_scene = _goblin_instance.get_node("Skeleton3D/BoneAttachment3D")
 	if anim_tree:
 		anim_playback = anim_tree.get("parameters/playback")   
-	
 	call_deferred("_deferred_ready")
 func _deferred_ready() -> void:
 	if is_first_spawn:
 		play_get_up_animation()
-		is_first_spawn = false
-
-
+	
 func _physics_process(delta: float) -> void:
 	if is_dead:
 		return  
@@ -88,7 +85,7 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 
-    
+	
 
 func _movimiento_jugador(delta: float) -> void:
 	if is_dead:
@@ -281,4 +278,3 @@ func _on_area_3d_area_exited(area: Area3D) -> void:
 		_dialogue_balloon = null
 		_dialogue_active = false
 		print("Jugador salió del área, diálogo cerrado.")
-		

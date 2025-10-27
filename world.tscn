@@ -1,11 +1,11 @@
 [gd_scene load_steps=14 format=3 uid="uid://bd5yprjvgjfqq"]
 
 [ext_resource type="PackedScene" uid="uid://eri7lkn1barl" path="res://Medieval Village MegaKit[Standard]/FBX/Floor_RedBrick.fbx" id="1_aqk2v"]
+[ext_resource type="Script" uid="uid://bkis1ptrgt3i8" path="res://scripts/GameManager.gd" id="1_gbfbk"]
 [ext_resource type="PackedScene" uid="uid://0txee0f88wos" path="res://sword.tscn" id="1_pkg7o"]
 [ext_resource type="PackedScene" uid="uid://dl0wxmfcihyvx" path="res://player_escena.tscn" id="4_aqk2v"]
-[ext_resource type="PackedScene" uid="uid://bk1via4tlx0t4" path="res://prueba_1.tscn" id="5_pkg7o"]
+[ext_resource type="Script" uid="uid://bvkjd2qrojrcf" path="res://scripts/Change.gd" id="5_pkg7o"]
 [ext_resource type="PackedScene" uid="uid://maxbx2hoab5o" path="res://Charapteres/Rudeus.tscn" id="6_dwbse"]
-[ext_resource type="Script" uid="uid://bvkjd2qrojrcf" path="res://scripts/Change.gd" id="7_gbfbk"]
 [ext_resource type="PackedScene" uid="uid://dvxht4vuiixmu" path="res://things/shield.fbx" id="8_ioo17"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_gbfbk"]
@@ -30,6 +30,7 @@ radius = 1.0995203
 
 [node name="Node3D" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.168354, 0, 0)
+script = ExtResource("1_gbfbk")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_wse8f")
@@ -301,23 +302,23 @@ shape = SubResource("BoxShape3D_dwbse")
 transform = Transform3D(1, 0, 0, 0, 0.38094115, 0.92459935, 0, -0.92459935, 0.38094115, 1.71182, 11.5296, 0.958118)
 
 [node name="Player" parent="." instance=ExtResource("4_aqk2v")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.075615, 0.42517334, 0.44757873)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.075615, 0.100883186, 0.44757873)
 
-[node name="Node3D2" type="Node3D" parent="."]
+[node name="Portal_1" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.095812, -0.072467506, 1.9843726)
-script = ExtResource("7_gbfbk")
-next_scene = ExtResource("5_pkg7o")
-_player_1 = ExtResource("4_aqk2v")
+script = ExtResource("5_pkg7o")
+target_scene_path = "uid://bk1via4tlx0t4"
 
-[node name="shield" parent="Node3D2" instance=ExtResource("8_ioo17")]
+[node name="shield" parent="Portal_1" instance=ExtResource("8_ioo17")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.53153676, 0)
 
-[node name="Area3D" type="Area3D" parent="Node3D2"]
+[node name="Area" type="Area3D" parent="Portal_1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11082393, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Node3D2/Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Portal_1/Area"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0845137, 0)
 shape = SubResource("SphereShape3D_wse8f")
 
 [node name="Node3D" parent="." instance=ExtResource("6_dwbse")]
 
-[connection signal="area_entered" from="Node3D2/Area3D" to="Node3D2" method="_on_area_3d_area_entered"]
+[connection signal="area_entered" from="Portal_1/Area" to="Portal_1" method="_on_area_area_entered"]

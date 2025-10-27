@@ -1,16 +1,11 @@
+
 extends Node3D
-
-@export var next_scene: PackedScene
-var new_world:Node
-var _player_instance:Node 
-
-
+var _player_instance:Node
+@export_file("*.tscn") var target_scene_path: String 
 func _ready() -> void:
 	_player_instance = get_tree().get_first_node_in_group("Player")
 
-func _on_area_3d_area_entered(area: Area3D) -> void:
-	if _player_instance :
-		call_deferred("change_scene")
-
-func change_scene() -> void:
-	get_tree().change_scene_to_packed(next_scene)
+func _on_area_area_entered(area: Area3D) -> void:
+	if _player_instance:
+		print("Portal: Jugador detectado. Llamando al GameManager...")
+		GameManager.call_deferred("change_scene_via_portal", target_scene_path)
