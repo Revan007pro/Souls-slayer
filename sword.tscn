@@ -28,5 +28,5 @@ shape = SubResource("BoxShape3D_e4ynd")
 transform = Transform3D(1, 0, 0, 0, 1.2923632, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("SphereShape3D_e4ynd")
 
-[connection signal="conectar_golpe" from="." to="." method="_on_conectar_golpe"]
+[connection signal="body_entered" from="AttackArea" to="." method="_on_attack_area_body_entered"]
 [connection signal="area_entered" from="Area3D" to="." method="_on_area_3d_area_entered"]

@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://wsfdmjrn2syw"]
+
+[ext_resource type="PackedScene" uid="uid://d0v52vlhr02gj" path="res://things/medieval+shield+3d+model.fbx" id="1_8v726"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8v726"]
+size = Vector3(0.055419922, 0.97509766, 1)
+
+[node name="medieval+shield+3d+model" instance=ExtResource("1_8v726")]
+transform = Transform3D(0.585, 0, 0, 0, 0.293, 0, 0, 0, 0.29, 0.013955355, 0, 0)
+
+[node name="_escudo_" type="Area3D" parent="." index="1" groups=["Arma"]]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="_escudo_" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.9999986, 0, 0, 0, 0.9999999, 0.0010986384, 0.01245115, 0)
+shape = SubResource("BoxShape3D_8v726")

@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1gvj7e4j8iuf"]
+
+[ext_resource type="PackedScene" uid="uid://0eceqerxhxdu" path="res://things/magic+staff+3d+model.fbx" id="1_jqpkh"]
+
+[node name="magic+staff+3d+model" instance=ExtResource("1_jqpkh")]

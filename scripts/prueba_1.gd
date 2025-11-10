@@ -1,4 +1,3 @@
-# NewWorld.gd (El script en el nodo raíz de la escena de destino)
 extends Node3D
 
 @onready var respawn_point: Marker3D = $RespawnPoint 
@@ -10,5 +9,5 @@ func _ready():
 	player_node.global_transform = respawn_point.global_transform
 	print("Mundo Nuevo: Jugador reubicado.")
 	if player_node.has_method("_deferred_ready"):
-		player_node.anim_playback.travel("State")
+		player_node.anim_playback.travel("State") # desactiva el primer spawn, que listo que sos jose del futuro
 		print("Segundo spawn")

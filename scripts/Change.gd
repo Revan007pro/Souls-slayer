@@ -8,4 +8,5 @@ func _ready() -> void:
 func _on_area_area_entered(area: Area3D) -> void:
 	if _player_instance:
 		print("Portal: Jugador detectado. Llamando al GameManager...")
-		GameManager.call_deferred("change_scene_via_portal", target_scene_path)
+		GameManager.change_scene_via_portal("next_scene_packed")
+

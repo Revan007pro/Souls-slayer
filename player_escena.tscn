@@ -16,7 +16,7 @@ size = Vector3(0.042816162, 0.24234772, 0.06402588)
 [sub_resource type="BoxShape3D" id="BoxShape3D_2les7"]
 size = Vector3(1, 0.8982849, 0.48583984)
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" groups=["Player"]]
 script = ExtResource("1_wvlaw")
 _enemy = ExtResource("2_xe1mq")
 _goblin_fbx = ExtResource("5_2les7")
@@ -50,12 +50,12 @@ shape = SubResource("BoxShape3D_far6r")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11606717, 0.12051448, -0.043078244)
 shape = SubResource("BoxShape3D_far6r")
 
-[node name="Area3D" type="Area3D" parent="."]
+[node name="area_player" type="Area3D" parent="."]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="area_player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55294347, 0.25708008)
 shape = SubResource("BoxShape3D_2les7")
 
 [connection signal="dead_signal" from="." to="." method="_on_dead_signal"]
-[connection signal="area_entered" from="Area3D" to="." method="_on_area_3d_area_entered"]
-[connection signal="area_exited" from="Area3D" to="." method="_on_area_3d_area_exited"]
+[connection signal="area_entered" from="area_player" to="." method="_on_area_3d_area_entered"]
+[connection signal="area_exited" from="area_player" to="." method="_on_area_3d_area_exited"]

@@ -10,7 +10,7 @@ func _ready():
 	attack_area.body_entered.connect(_on_attack_area_body_entered) 	
 
 func _on_attack_area_body_entered(body: Node):
-	if body.is_in_group("enemy") or body.is_in_group("player"):
+	if body.is_in_group("enemy") or body.is_in_group("Player"):
 		print("¡ESPADA: Golpe conectado con " ,body.name)
 		conectar_golpe.emit(damage_amount)
 		if body.has_method("take_damage"):

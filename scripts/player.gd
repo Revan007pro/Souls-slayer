@@ -8,17 +8,22 @@ class_name player
 @export var _enemy: PackedScene
 @export var _goblin_fbx: PackedScene
 @onready var _sword: PackedScene = preload("res://sword.tscn")
+@onready var _escudo:PackedScene= preload("res://escudo_escena.tscn")
+const  Agregar = preload("res://dialogues_pruebas/Agregar.dialogue")  
 
 var _sword_instance: Node3D
 var _goblin_instance: Node3D 
 var _arma_instancia =Node
 var anim_tree: AnimationTree  
+var _shield:Node3D
+var bone_shield:BoneAttachment3D
 var bone_scene: BoneAttachment3D
 var _dialogue_balloon = null
 var is_combact:bool=false
 var _dialogue_active = false
+var tengo_escudo:bool=false
 
-const  Agregar = preload("res://dialogues_pruebas/Agregar.dialogue")  
+
 
 @onready var pivote: Node3D = $Pivote
 @onready var _camara: Camera3D = $Pivote/Camera3D
@@ -52,18 +57,21 @@ var is_attacking: bool = false
 var wait_star: float = 2.8
 var wait_to_star: bool = false
 var _blocking: bool
-
+var _state: String = "idle"
 var sensibilidad_camara: float = 0.5
+var inventario_instancia: _inventario=_inventario.new()
+signal recoger_objeto(area:Area3D)
+var objeto_cercano: Area3D = null
 
 func _ready() -> void:
 	#GameManager._player_recurrente(self)
+	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-	add_to_group("player")
-	_arma_instancia = get_tree().get_first_node_in_group("Arma")
 	_goblin_instance = _goblin_fbx.instantiate()
 	add_child(_goblin_instance)
 	anim_tree = _goblin_instance.get_node("anim_tree")  
 	bone_scene = _goblin_instance.get_node("Skeleton3D/BoneAttachment3D")
+	bone_shield = _goblin_instance.get_node("Skeleton3D/shield")
 	if anim_tree:
 		anim_playback = anim_tree.get("parameters/playback")   
 	call_deferred("_deferred_ready")
@@ -74,7 +82,9 @@ func _deferred_ready() -> void:
 func _physics_process(delta: float) -> void:
 	if is_dead:
 		return  
+	inventario_instancia.invetarioPlayer()
 	_movimiento_jugador(delta)
+	conectar_signal()
 	_aplicar_gravedad(delta)
 	_salto_jugador()
 	is_attaacking()
@@ -84,9 +94,18 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	if Input.is_action_just_pressed("Dialogue") and objeto_cercano:
+		emit_signal("recoger_objeto", objeto_cercano)
+		print("✅ Jugador recogió:", objeto_cercano.name)
+		objeto_cercano = null
 
+func conectar_signal()->void:
+	if Input.is_action_just_pressed("Dialogue") and objeto_cercano:
+		emit_signal("recoger_objeto", objeto_cercano)
+		print("Jugador emitió recoger_objeto:", objeto_cercano.name)
+		_escudo_()
+		GameManager._on_eliminar_objetos(objeto_cercano)
 	
-
 func _movimiento_jugador(delta: float) -> void:
 	if is_dead:
 		return
@@ -113,6 +132,7 @@ func _wait_sword() -> void:
 	bone_scene.add_child(_sword_instance)
 	_sword_instance.position = Vector3(0.296, -0.002, 0.156)
 	_sword_instance.rotation_degrees = Vector3(1.7, 63.5, 143.8)
+	
 func _desvainar_espada() -> void:
 	
 	if Input.is_action_just_pressed("desvainar"):
@@ -139,25 +159,29 @@ func _desvainar_espada() -> void:
 			print("Espada envainada")
 	anim_tree.set("parameters/With/blend_position", _vector2)
 
-func _bloquear()->void:
-	while Input.is_action_just_pressed("block"):
-		is_combact=true
-		_desvainar=true
-		anim_playback.travel("Ani_player_Block")
-		print("animacion bloquar")
-		await get_tree().create_timer(1.6).timeout
+func _bloquear() -> void:
+	if Input.is_action_pressed("block") and not _blocking:
+		_blocking = true
+		_set_state("Ani_player_Block")
+		is_combact = true
+	elif not Input.is_action_pressed("block") and _blocking:
 		_blocking = false
-		anim_playback.travel("State")
-		break
+		is_combact = false
+		_set_state("State") 
+
+func _set_state(new_state: String) -> void:
+	if _state != new_state:
+		_state = new_state
+		anim_playback.travel(_state)
 func _salto_jugador() :
-	if Input.is_action_just_pressed("salto") and is_on_floor():
+	if Input.is_action_just_pressed("salto") and is_on_floor() and not Input.is_action_pressed("adelante"):
+	
 		var can_jump:int=20
 		if self._stamina.value < can_jump:
 			print("no hay estamina no se puede saltar")
 			return
 		self._stamina.value -=can_jump
 		self._stamina.max_value=100
-		
 		Jumping = true
 		print("salto")
 		anim_playback.travel("Ani_player_Jump")
@@ -227,24 +251,17 @@ func play_get_up_animation() -> void:
 
 
 func take_damage(damage: float) -> void:
+	print("puta mierda")
 	is_combact=true
 	self.health -= damage
 	_damage_=true
-	#anim_playback.travel("Ani_player_Damage")
-	
-	
-	#if _sword:
-	#	_sword_instance=_sword.instantiate()
-	#	add_child(_sword_instance)
-	#	if _sword_instance.has_signal("conectar_golpe"):
-	#		print("Señal de espada conectada \"error")
-	#		_sword_instance.conectar_golpe.connect() 
-	#if _sword_instance.has_method("activate_sword"):
-	#	print("ponete a estudiar mejor")
-		
+	#anim_playback.travel("Ani_player_Damage"
 	
 	if is_dead: 
 		return
+	if _salud:
+		self._salud.value = health
+		self._salud.max_value = 100.0
 
 	if health <= 0:
 		death_sound.play()
@@ -255,9 +272,7 @@ func take_damage(damage: float) -> void:
 		anim_playback.travel("Ani_player_dead")
 		await get_tree().create_timer(2.8).timeout
 		get_tree().reload_current_scene()
-	if _salud:
-		self._salud.value = health
-		self._salud.max_value = 100.0
+	
 
 func _regenerar_stamina()->void:
 	var stamina_mas:int=10
@@ -266,15 +281,37 @@ func _regenerar_stamina()->void:
 		self._stamina.value +=stamina_mas
 		break
 
+func _escudo_() -> void:
+	if not is_instance_valid(_shield):
+		_shield = _escudo.instantiate() as Node3D
+		bone_shield.add_child(_shield)
+		_shield.position = Vector3(0.039, 0.013, -0.013)
+		_shield.rotation_degrees = Vector3(-3.0, 74.7, 6.1)
+		print("🛡️ Escudo instanciado en:", bone_shield.name)
+	else:
+		_shield.queue_free()
+		_shield = null
+
+
 func _on_area_3d_area_entered(area: Area3D) -> void:
-	if not _dialogue_active and is_combact==false:
+	if not _dialogue_active and is_combact == false:
 		_dialogue_balloon = DialogueManager.show_dialogue_balloon(Agregar)
 		_dialogue_active = true
 		print("Jugador dentro del área, mostrando diálogo.")
+	
+	if area.name in ["_escudo_", "espada"] and _dialogue_active:
+		objeto_cercano = area
+		print("🧭 Puedes recoger:", area.name)
+		emit_signal("recoger_objeto", area)
+		
+
 
 func _on_area_3d_area_exited(area: Area3D) -> void:
 	if _dialogue_active and _dialogue_balloon:
 		_dialogue_balloon.queue_free()
 		_dialogue_balloon = null
 		_dialogue_active = false
-		print("Jugador salió del área, diálogo cerrado.")
+
+	if objeto_cercano == area:
+		objeto_cercano = null
+		print("⛔ Te alejaste del objeto")
