@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://dl0wxmfcihyvx"]
+[gd_scene load_steps=10 format=3 uid="uid://dl0wxmfcihyvx"]
 
 [ext_resource type="Script" uid="uid://m8m6msav2jrv" path="res://scripts/player.gd" id="1_wvlaw"]
-[ext_resource type="PackedScene" uid="uid://duuld4xrh2har" path="res://Charapteres/enemigo_escena.tscn" id="2_xe1mq"]
 [ext_resource type="PackedScene" uid="uid://b6vrdgxpuou7p" path="res://healt.tscn" id="4_2les7"]
 [ext_resource type="PackedScene" uid="uid://di7dk6s4w6n6s" path="res://fbx/goblin_fbx.tscn" id="5_2les7"]
+[ext_resource type="Texture2D" uid="uid://bjlyrfcmnu7ii" path="res://Menu/Copilot_20251117_155656.png" id="5_far6r"]
+[ext_resource type="Texture2D" uid="uid://rwtde87ujke6" path="res://Imagenes/inventario.png" id="5_o77oc"]
 [ext_resource type="AudioStream" uid="uid://crtuc0q8od1p3" path="res://sonidos/sanido_muerte.mp3" id="5_xe1mq"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_far6r"]
@@ -18,7 +19,6 @@ size = Vector3(1, 0.8982849, 0.48583984)
 
 [node name="Player" type="CharacterBody3D" groups=["Player"]]
 script = ExtResource("1_wvlaw")
-_enemy = ExtResource("2_xe1mq")
 _goblin_fbx = ExtResource("5_2les7")
 
 [node name="Pivote" type="Node3D" parent="."]
@@ -32,8 +32,101 @@ transform = Transform3D(-0.98869103, 0, 0.14996666, 0, 1, 0, -0.14996666, 0, -0.
 [node name="RayCast3D" type="RayCast3D" parent="."]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 0
 
 [node name="healt" parent="CanvasLayer" instance=ExtResource("4_2les7")]
+offset_left = 114.0
+offset_top = 43.0
+offset_right = 367.0
+offset_bottom = 70.0
+
+[node name="Slot1" type="TextureRect" parent="CanvasLayer"]
+offset_left = 129.0
+offset_top = 337.0
+offset_right = 1153.0
+offset_bottom = 1873.0
+scale = Vector2(0.06, 0.06)
+localize_numeral_system = false
+texture = ExtResource("5_far6r")
+stretch_mode = 4
+
+[node name="Slot3" type="TextureRect" parent="CanvasLayer"]
+offset_left = 184.0
+offset_top = 413.0
+offset_right = 1208.0
+offset_bottom = 1949.0
+scale = Vector2(0.06, 0.06)
+localize_numeral_system = false
+texture = ExtResource("5_far6r")
+expand_mode = 3
+stretch_mode = 4
+
+[node name="Slot4" type="TextureRect" parent="CanvasLayer"]
+offset_left = 129.00002
+offset_top = 488.99997
+offset_right = 1153.0
+offset_bottom = 2025.0
+scale = Vector2(0.06, 0.06)
+localize_numeral_system = false
+texture = ExtResource("5_far6r")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="CanvasLayer" type="CanvasLayer" parent="CanvasLayer" groups=["UI"]]
+
+[node name="Icon1" type="TextureRect" parent="CanvasLayer/CanvasLayer"]
+z_index = 1
+z_as_relative = false
+offset_left = 143.0
+offset_top = 353.0
+offset_right = 177.0
+offset_bottom = 406.0
+expand_mode = 1
+
+[node name="Icon3" type="TextureRect" parent="CanvasLayer/CanvasLayer"]
+z_index = 1
+z_as_relative = false
+offset_left = 236.99995
+offset_top = 431.0
+offset_right = 297.0796
+offset_bottom = 459.10776
+rotation = -4.712389
+scale = Vector2(0.9122805, 1.4992865)
+expand_mode = 1
+
+[node name="Icon4" type="TextureRect" parent="CanvasLayer/CanvasLayer"]
+z_index = 1
+z_as_relative = false
+offset_left = 143.0
+offset_top = 509.0
+offset_right = 177.0
+offset_bottom = 562.0
+expand_mode = 1
+
+[node name="Icon2" type="TextureRect" parent="CanvasLayer/CanvasLayer"]
+z_index = 1
+z_as_relative = false
+offset_left = 90.0
+offset_top = 430.0
+offset_right = 125.0
+offset_bottom = 488.0
+expand_mode = 1
+
+[node name="Inventario" type="TextureRect" parent="CanvasLayer/CanvasLayer"]
+visible = false
+offset_left = 419.0
+offset_top = 94.0
+offset_right = 697.0
+offset_bottom = 479.0
+texture = ExtResource("5_o77oc")
+
+[node name="Slot2" type="TextureRect" parent="CanvasLayer"]
+offset_left = 78.00006
+offset_top = 417.0
+offset_right = 1102.0
+offset_bottom = 1953.0
+scale = Vector2(0.06, 0.06)
+texture = ExtResource("5_far6r")
 
 [node name="dead_sonido" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_xe1mq")

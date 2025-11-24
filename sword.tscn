@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://dirc0wmto415r" path="res://scripts/Sword_script.gd" id="2_r76a6"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_e4ynd"]
-size = Vector3(0.027282715, 0.014221191, 0.45507813)
+size = Vector3(0.027282715, 0.014221191, 0.41259766)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_e4ynd"]
 radius = 0.49012482
@@ -19,14 +19,14 @@ transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1.1949154, 0, 0, 0, 0)
 [node name="AttackArea" type="Area3D" parent="." index="1"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea" index="0"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00033569336, 0.0023633242, 0.25371128)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00033569336, 0.0023633242, 0.23247103)
 shape = SubResource("BoxShape3D_e4ynd")
 
-[node name="Area3D" type="Area3D" parent="." index="2"]
+[node name="espada" type="Area3D" parent="." index="2"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" index="0" groups=["Arma"]]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="espada" index="0" groups=["Arma"]]
 transform = Transform3D(1, 0, 0, 0, 1.2923632, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("SphereShape3D_e4ynd")
 
 [connection signal="body_entered" from="AttackArea" to="." method="_on_attack_area_body_entered"]
-[connection signal="area_entered" from="Area3D" to="." method="_on_area_3d_area_entered"]
+[connection signal="area_entered" from="espada" to="." method="_on_area_3d_area_entered"]

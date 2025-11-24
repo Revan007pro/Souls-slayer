@@ -8,29 +8,28 @@ class_name enemy
 @export var stopping_distance: float = 1.5
 @export var tiempo_maximo_rutina: float = 4.0
 @export var rango_movimiento_aleatorio: float = 5.0
-@export var _player: PackedScene 
+@export var _player: PackedScene
 var _player_instance: Node
 var attack_timer: float = 0.0
 @export var attack_cooldown: float = 1.5
-@export var _enemigo_instancia:PackedScene  
-var enemigo_fbx:Node3D                    
+@export var _enemigo_instancia: PackedScene
+var enemigo_fbx: Node3D
 @onready var nav_agent = $NavigationAgent3D
 @onready var _salud: ProgressBar = $Sprite3D/SubViewport/healt
 @onready var anim_tree: AnimationTree
-var anim_playback:AnimationNodeStateMachinePlayback
+var anim_playback: AnimationNodeStateMachinePlayback
 var _vector2: Vector2 = Vector2.ZERO
 var is_moving: bool = false
-var is_attacking:bool=false
-var attack_count:int=2
-var _hevy:bool=false
-var _ataque_fuerte:float=7.5
-var is_dead:bool
-var State:bool
-var _damage_:bool
+var is_attacking: bool = false
+var attack_count: int = 2
+var _hevy: bool = false
+var _ataque_fuerte: float = 7.5
+var is_dead: bool
+var State: bool
+var _damage_: bool
 signal golpe_conectado(damage: float)
-signal dead_signal(is_dead:bool)
+signal dead_signal(is_dead: bool)
 var health: float = 100
-
 
 # Variables de estado
 var _cronometro: float = 0.0
@@ -38,7 +37,7 @@ var _rutina: int = 0
 var angulo_rotacion_aleatorio: Quaternion
 var speed: float = 5.0
 var player_is_dead: bool = false
-var distan_heavy:float=4.5
+var distan_heavy: float = 4.5
 	
 func _ready():
 	_cronometro = tiempo_maximo_rutina
@@ -46,11 +45,11 @@ func _ready():
 	add_child(enemigo_fbx)
 	_player_instance = get_tree().get_first_node_in_group("Player")
 	clase_guerrero()
-	anim_tree = enemigo_fbx.get_node("anim_tree") 
-	_salud.visible=false
+	anim_tree = enemigo_fbx.get_node("anim_tree")
+	_salud.visible = false
 	if anim_tree:
 		anim_tree.active = true
-		anim_playback = anim_tree.get("parameters/playback")	
+		anim_playback = anim_tree.get("parameters/playback")
 	add_to_group("enemy")
 
 func _physics_process(delta):
@@ -63,16 +62,16 @@ func _physics_process(delta):
 	comportamiento_enemigo(delta)
 	_aplicar_gravedad(delta)
 	move_and_slide()
-	if is_moving==false:
+	if is_moving == false:
 		_vector2 = Vector2(0, 0)
 
 func comportamiento_enemigo(delta) -> void:
 	var distance_to_target = 0.0
-	if _player_instance:  
+	if _player_instance:
 		distance_to_target = global_position.distance_to(_player_instance.global_position)
 
 
-	if player_is_dead or not _player_instance:  
+	if player_is_dead or not _player_instance:
 		_rutina = 2
 	else:
 		if distance_to_target <= stopping_distance:
@@ -94,7 +93,7 @@ func comportamiento_enemigo(delta) -> void:
 		
 		1:
 			is_moving = true
-			nav_agent.target_position = _player_instance.global_position  # Usamos _player_instance
+			nav_agent.target_position = _player_instance.global_position # Usamos _player_instance
 			var next_pos = nav_agent.get_next_path_position()
 			var direction = (next_pos - global_position).normalized()
 			velocity = direction * speed
@@ -118,7 +117,7 @@ func comportamiento_enemigo(delta) -> void:
 			velocity = direction * speed
 			
 			_vector2 = Vector2(0, 1) # Animación de caminar
-			anim_tree.set("parameters/State/blend_position", _vector2) 
+			anim_tree.set("parameters/State/blend_position", _vector2)
 			anim_playback.travel("State")
 
 		3:
@@ -136,14 +135,14 @@ func comportamiento_enemigo(delta) -> void:
 
 			if distan_heavy:
 				is_moving = false
-				look_at(_player_instance.global_position, Vector3.UP)  # Usamos _player_instance
+				look_at(_player_instance.global_position, Vector3.UP) # Usamos _player_instance
 				velocity = Vector3.ZERO
 				#anim_playback.travel("Hevy")
 
 				is_attacking = false
 				
 				# Vuelve a evaluar el estado después de atacar
-				var distance_after_attack = global_position.distance_to(_player_instance.global_position)  # Usamos _player_instance
+				var distance_after_attack = global_position.distance_to(_player_instance.global_position) # Usamos _player_instance
 				if distance_after_attack <= stopping_distance:
 					_rutina = 3 # Atacar de nuevo
 				elif distance_after_attack <= detection_range:
@@ -159,16 +158,15 @@ func _rotate_to_target(direction: Vector3, delta: float):
 	rotation.z = 0
 
 		
-
-func _muerte_propia() ->void:
+func _muerte_propia() -> void:
 	anim_playback.travel("ani_Dead")
 	await get_tree().create_timer(8.2).timeout
 	self.queue_free()
 	
 
 func take_damage(damage: float) -> void:
-	_damage_=true
-	_salud.visible=true
+	_damage_ = true
+	_salud.visible = true
 	anim_playback.travel("ani_Damage")
 	if is_dead:
 		return
