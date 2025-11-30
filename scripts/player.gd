@@ -99,6 +99,7 @@ func _physics_process(delta: float) -> void:
 		emit_signal("recoger_objeto", objeto_cercano)
 		print("✅ Jugador recogió:", objeto_cercano.name)
 		objeto_cercano = null
+	
 
 func conectar_signal(area: Area3D) -> void:
 	if Input.is_action_just_pressed("Dialogue") and objeto_cercano:
@@ -107,6 +108,10 @@ func conectar_signal(area: Area3D) -> void:
 		print("escudo en el inventario")
 		_escudo_()
 	Inventario.actualizar_slots()
+	if Inventario.open_inventario:
+		_camera_can_move = false
+	else:
+		_camera_can_move = true
 
 			
 func _movimiento_jugador(delta: float) -> void:
@@ -200,7 +205,7 @@ func _input(event: InputEvent) -> void:
 	if is_dead:
 		return
 	
-	# Movimiento de cámara
+	# Movimiento de camara
 	if event is InputEventMouseMotion and _camera_can_move == true:
 		rotate_y(deg_to_rad(-event.relative.x * sensibilidad_camara))
 		pivote.rotate_x(deg_to_rad(event.relative.y * sensibilidad_camara))

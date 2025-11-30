@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://bk1via4tlx0t4"]
+[gd_scene load_steps=3 format=3 uid="uid://bk1via4tlx0t4"]
 
 [ext_resource type="Script" uid="uid://h8oliiw65ee2" path="res://scripts/prueba_1.gd" id="1_8dtqf"]
 [ext_resource type="PackedScene" uid="uid://chol2xlfbq7cu" path="res://demo/Demo.tscn" id="2_8dtqf"]
-[ext_resource type="PackedScene" uid="uid://wsfdmjrn2syw" path="res://escudo_escena.tscn" id="3_wp4uw"]
 
 [node name="Prueba_01" type="Node3D"]
 script = ExtResource("1_8dtqf")
@@ -12,6 +11,3 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6912494, 0, 0)
 
 [node name="Demo" parent="." instance=ExtResource("2_8dtqf")]
 script = null
-
-[node name="medieval+shield+3d+model" parent="." instance=ExtResource("3_wp4uw")]
-transform = Transform3D(0.585, 0, 0, 0, 0.293, 0, 0, 0, 0.29, 70.82937, 24.657843, 35.755844)

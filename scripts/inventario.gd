@@ -1,5 +1,6 @@
 class_name _inventario
 extends Node
+var open_inventario: bool = false
 
 var _inventario_: Array = [
 
@@ -32,6 +33,7 @@ func actualizar_slots() -> void:
 	var inv = ui.get_node("Inventario")
 
 	if Input.is_action_just_pressed("fast_inven"):
+		open_inventario = true
 		if inv.visible == false:
 			print("inventario instanciado")
 			inv.visible = true
@@ -39,6 +41,7 @@ func actualizar_slots() -> void:
 		else:
 			print("inventario cerrado")
 			inv.visible = false
+			open_inventario = false
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 

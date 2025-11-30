@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://b6qm30cm8ouye"]
+
+[ext_resource type="PackedScene" uid="uid://crbuuhr64xgkp" path="res://things/Old House 2/Old House Files/Old House 2 3D Models.FBX" id="1_63tyf"]
+[ext_resource type="PackedScene" uid="uid://dl0wxmfcihyvx" path="res://player_escena.tscn" id="2_wl8wi"]
+
+[node name="Old House 2 3D Models" instance=ExtResource("1_63tyf")]
+
+[node name="Player" parent="." index="3" instance=ExtResource("2_wl8wi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8.92721)

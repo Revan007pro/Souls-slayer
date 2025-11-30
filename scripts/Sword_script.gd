@@ -17,6 +17,9 @@ func _on_attack_area_body_entered(body: Node):
 	
 func activate_sword():
 	attack_area.monitoring = true
-
+	if attack_area.monitoring == true:
+		print("instanciando colader de espada")
 func off_sword():
 	attack_area.monitoring = false
+	if attack_area.monitoring == false:
+		print("desactivando colader de espada")

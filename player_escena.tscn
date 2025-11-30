@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://b6vrdgxpuou7p" path="res://healt.tscn" id="4_2les7"]
 [ext_resource type="PackedScene" uid="uid://di7dk6s4w6n6s" path="res://fbx/goblin_fbx.tscn" id="5_2les7"]
 [ext_resource type="Texture2D" uid="uid://bjlyrfcmnu7ii" path="res://Menu/Copilot_20251117_155656.png" id="5_far6r"]
-[ext_resource type="Texture2D" uid="uid://rwtde87ujke6" path="res://Imagenes/inventario.png" id="5_o77oc"]
+[ext_resource type="Texture2D" uid="uid://cr0v7xll2x5g5" path="res://Imagenes/inventario.png" id="5_o77oc"]
 [ext_resource type="AudioStream" uid="uid://crtuc0q8od1p3" path="res://sonidos/sanido_muerte.mp3" id="5_xe1mq"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_far6r"]

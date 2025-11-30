@@ -29,6 +29,10 @@ runtime/balloon_path="res://Dialogue//balloon.tscn"
 
 enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg")
 
+[filesystem]
+
+import/blender/enabled=false
+
 [global_group]
 
 Player=""
