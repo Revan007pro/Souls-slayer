@@ -1,13 +1,12 @@
-# Ignorar todo por defecto
 *
 
-# PERO incluir estos directorios y sus contenidos
 !scripts/
 !*.gd
-!*.tscn
+!*.tscn.
 !.gitignore
 !README.md
-
+!*.fbx
+!*.glb
 
 
 

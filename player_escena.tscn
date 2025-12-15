@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://b6vrdgxpuou7p" path="res://healt.tscn" id="4_2les7"]
 [ext_resource type="PackedScene" uid="uid://di7dk6s4w6n6s" path="res://fbx/goblin_fbx.tscn" id="5_2les7"]
 [ext_resource type="Texture2D" uid="uid://bjlyrfcmnu7ii" path="res://Menu/Copilot_20251117_155656.png" id="5_far6r"]
-[ext_resource type="Texture2D" uid="uid://cr0v7xll2x5g5" path="res://Imagenes/inventario.png" id="5_o77oc"]
+[ext_resource type="Texture2D" uid="uid://cy6o0e4urcwnh" path="res://Imagenes/Inventario.png" id="5_o77oc"]
 [ext_resource type="AudioStream" uid="uid://crtuc0q8od1p3" path="res://sonidos/sanido_muerte.mp3" id="5_xe1mq"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_far6r"]
@@ -114,13 +114,15 @@ expand_mode = 1
 
 [node name="Inventario" type="TextureRect" parent="CanvasLayer/CanvasLayer"]
 visible = false
-offset_left = 419.0
-offset_top = 94.0
-offset_right = 697.0
-offset_bottom = 479.0
+offset_left = 406.0
+offset_top = 59.0
+offset_right = 783.0
+offset_bottom = 578.0
 texture = ExtResource("5_o77oc")
+expand_mode = 1
 
 [node name="Slot2" type="TextureRect" parent="CanvasLayer"]
+clip_children = 2
 offset_left = 78.00006
 offset_top = 417.0
 offset_right = 1102.0

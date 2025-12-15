@@ -1,11 +1,13 @@
-[gd_scene load_steps=10 format=3 uid="uid://bd5yprjvgjfqq"]
+[gd_scene load_steps=12 format=3 uid="uid://bd5yprjvgjfqq"]
 
 [ext_resource type="PackedScene" uid="uid://eri7lkn1barl" path="res://Medieval Village MegaKit[Standard]/FBX/Floor_RedBrick.fbx" id="1_aqk2v"]
 [ext_resource type="Script" uid="uid://bkis1ptrgt3i8" path="res://scripts/GameManager.gd" id="1_gbfbk"]
 [ext_resource type="PackedScene" uid="uid://0txee0f88wos" path="res://sword.tscn" id="1_pkg7o"]
 [ext_resource type="Script" uid="uid://bvkjd2qrojrcf" path="res://scripts/Change.gd" id="5_pkg7o"]
+[ext_resource type="PackedScene" uid="uid://dl0wxmfcihyvx" path="res://player_escena.tscn" id="7_pkg7o"]
 [ext_resource type="PackedScene" uid="uid://wsfdmjrn2syw" path="res://escudo_escena.tscn" id="8_gbfbk"]
 [ext_resource type="PackedScene" uid="uid://dvxht4vuiixmu" path="res://things/shield.fbx" id="8_ioo17"]
+[ext_resource type="PackedScene" uid="uid://buuitjn1ok1ug" path="res://bow.tscn" id="8_wse8f"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_036b0"]
 vertices = PackedVector3Array(0, 0.427246, -0.520264, 0, 0.427246, 0.479736, 0.5, 0.427246, 0.479736, 0.5, 0.427246, -0.520264)
@@ -304,5 +306,14 @@ shape = SubResource("SphereShape3D_wse8f")
 
 [node name="Escudo" parent="." instance=ExtResource("8_gbfbk")]
 transform = Transform3D(0.585, 0, 0, 0, 0.293, 0, 0, 0, 0.29, 4.5191116, 0.67789656, 1.6926135)
+
+[node name="Player" parent="." instance=ExtResource("7_pkg7o")]
+transform = Transform3D(-0.2560026, 0, -0.9666761, 0, 1, 0, 0.9666761, 0, -0.2560026, 11.17697, 0, 0)
+speed = null
+acceleration = null
+fuerza_salto = null
+
+[node name="bow" parent="." instance=ExtResource("8_wse8f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4829893, 0.5233498, 2.109446)
 
 [connection signal="area_entered" from="Portal_1/Area" to="Portal_1" method="_on_area_area_entered"]

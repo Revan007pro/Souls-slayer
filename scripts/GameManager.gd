@@ -1,7 +1,7 @@
 extends Node
 
 @onready var _player_recurrente: PackedScene = preload("res://player_escena.tscn")
-var player_instance: Node
+var player_instance: Node3D
 var cambiar: bool
 var escenas_mundo: Dictionary = {
 	"town": "res://town.tscn",

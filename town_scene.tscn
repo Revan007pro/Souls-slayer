@@ -1,13 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://ostmeo4yyvci"]
+[gd_scene load_steps=3 format=3 uid="uid://ostmeo4yyvci"]
 
 [ext_resource type="PackedScene" uid="uid://dudmj1tng7o72" path="res://things/medieval_modular_house.glb" id="1_cur8n"]
 [ext_resource type="PackedScene" uid="uid://bd5yprjvgjfqq" path="res://world.tscn" id="2_xmp7t"]
-[ext_resource type="PackedScene" uid="uid://dl0wxmfcihyvx" path="res://player_escena.tscn" id="3_xmp7t"]
 
 [node name="Sketchfab_Scene" instance=ExtResource("1_cur8n")]
 
 [node name="Node3D" parent="." index="1" instance=ExtResource("2_xmp7t")]
 transform = Transform3D(-0.061902184, 0, 0.9980822, 0, 1, 0, -0.9980822, 0, -0.061902184, -2.239561, 0.9994154, -4.81621)
-
-[node name="Player" parent="." index="2" instance=ExtResource("3_xmp7t")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3434849, 1.0227653, -18.334253)
