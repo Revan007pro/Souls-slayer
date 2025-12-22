@@ -7,11 +7,9 @@ class_name player
 @export var fuerza_salto: float = 4.5
 @export var _enemy: PackedScene
 @export var _goblin_fbx: PackedScene
-@onready var _sword: PackedScene = preload("res://sword.tscn")
 @onready var _escudo: PackedScene = preload("res://escudo_escena.tscn")
 const Agregar = preload("res://dialogues_pruebas/Agregar.dialogue")
 
-var _sword_instance: Node3D
 var _goblin_instance: Node3D
 var _arma_instancia = Node
 var anim_tree: AnimationTree
@@ -67,13 +65,14 @@ signal recoger_objeto(area: Area3D)
 var objeto_cercano: Area3D = null
 @onready var ui = get_tree().get_first_node_in_group("UI")
 func _ready() -> void:
+	clase_guerrero()
 	GameManager.player_instance = self
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	_goblin_instance = _goblin_fbx.instantiate()
 	add_child(_goblin_instance)
 	Weapons.set_goblin_instance(_goblin_instance)
 	anim_tree = _goblin_instance.get_node("anim_tree")
-	bone_scene = _goblin_instance.get_node("Skeleton3D/BoneAttachment3D")
+	
 	bone_shield = _goblin_instance.get_node("Skeleton3D/shield")
 	if anim_tree:
 		anim_playback = anim_tree.get("parameters/playback")
@@ -144,21 +143,14 @@ func _movimiento_jugador(delta: float) -> void:
 
 	anim_tree.set("parameters/State/blend_position", _vector2)
 
-func _wait_sword() -> void:
-	await get_tree().create_timer(0.7).timeout
-	_sword_instance = _sword.instantiate() as Node3D
-	bone_scene.add_child(_sword_instance)
-	_sword_instance.position = Vector3(0.296, -0.002, 0.156)
-	_sword_instance.rotation_degrees = Vector3(1.7, 63.5, 143.8)
-	_sword_instance.name = "SwordEquipped"
-	
+
 func _desvainar_espada() -> void:
 	if Input.is_action_just_pressed("desvainar") and Inventario._inventario_.has("espada"):
 		if !_desvainar:
 			print("espada en el inventario")
 			_desvainar = true
 			is_combact = true
-			_wait_sword()
+			Weapons._wait_sword()
 			anim_playback.travel("Ani_player_Desvainar")
 			print("Animación desvainar")
 			await get_tree().create_timer(1.6).timeout
@@ -172,7 +164,7 @@ func _desvainar_espada() -> void:
 			await get_tree().create_timer(1.1).timeout
 			_desvainar = false
 			_desvainar_with = false
-			bone_scene.remove_child(_sword_instance)
+			bone_scene.remove_child(Weapons._sword_instance)
 			anim_playback.travel("State")
 			print("Espada envainada")
 	anim_tree.set("parameters/With/blend_position", _vector2)
@@ -272,8 +264,16 @@ func _input(event: InputEvent) -> void:
 		if _enemigo_instancia:
 			_camara.look_at(_enemigo_instancia.global_position)
 
+# En player.gd
+func esperar() -> void:
+	await get_tree().create_timer(0.8).timeout
+	var sword = await Weapons._wait_sword() # ¡Usa await!
+	var attack_area = sword.get_node("AttackArea")
+	attack_area.monitoring = true
+
 func is_attaacking() -> void:
 	if Input.is_action_just_pressed("attack") and _desvainar == true:
+		esperar()
 		is_combact = true
 		var can_attack: int = 30
 		if _stamina.value < can_attack:
@@ -371,3 +371,14 @@ func _on_area_3d_area_exited(area: Area3D) -> void:
 	if objeto_cercano == area:
 		objeto_cercano = null
 		print("⛔ Te alejaste del objeto")
+
+
+# En player.gd (el script que tiene la AnimationPlayer)
+
+#func animation_activate_sword():
+	# Buscamos cualquier nodo en el grupo "Arma" que sea hijo nuestro
+	# y ejecutamos su función de activación
+ #   get_tree().call_group("Arma", "activate_sword")
+
+#func animation_off_sword():
+ #   get_tree().call_group("Arma", "off_sword")

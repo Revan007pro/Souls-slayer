@@ -11,6 +11,7 @@ var objetos_iconos := {
 	"espada": preload("res://Menu/Iconos/espada.png"),
 	"_escudo_": preload("res://Menu/Iconos/escudo_ico.png"),
 	"bow": preload("res://Menu/Iconos/bow-removebg-preview.png"),
+	
 }
 var ubicacion_objeto := {
 	"espada": 2,
@@ -75,9 +76,6 @@ func actualizar_slots(ui) -> void:
 			#icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 
 
-#	if not player_node.is_connected("recoger_objeto", Callable(self, "_on_recoger_objeto")):
-#		player_node.connect("recoger_objeto", Callable(self, "_on_recoger_objeto"))
-#		print("✅ Señal 'recoger_objeto' conectada con el inventario.") forma para conectar señales
 func cambiar_icono(direccion: int, inv, icon) -> void:
 	index_objeto_actual = (index_objeto_actual + direccion) % _inventario_.size()
 
@@ -91,7 +89,7 @@ func cambiar_icono(direccion: int, inv, icon) -> void:
 
 	
 func tween_call_back(inv, nueva_textura, pos_inicial, icon, direccion) -> void:
-	var desplazamiento := 25.8
+	var desplazamiento: float = 25.8
 	var icon3 = ui.get_node("Icon3")
 	var pos_salida: Vector2
 	var pos_entrada: Vector2

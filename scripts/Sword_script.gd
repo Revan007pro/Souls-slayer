@@ -1,7 +1,17 @@
 extends Node3D
 
-@onready var attack_area: Area3D = $AttackArea
+@onready var attack_area := find_child("AttackArea", true, false) as Area3D
+
+
+#var sword_scene: PackedScene = preload("res://sword.tscn")
+#var sword: Node3D
+#var attack_area: Area3D
+
 @export var damage_amount: float = 10
+
+#func _ready():
+#	sword = sword_scene.instantiate()
+#	attack_area = sword.get_node("AttackArea")
 
 
 signal conectar_golpe(damage: float)
@@ -17,9 +27,9 @@ func _on_attack_area_body_entered(body: Node):
 	
 func activate_sword():
 	attack_area.monitoring = true
-	if attack_area.monitoring == true:
-		print("instanciando colader de espada")
+
 func off_sword():
 	attack_area.monitoring = false
+	print(attack_area.monitoring)
 	if attack_area.monitoring == false:
 		print("desactivando colader de espada")

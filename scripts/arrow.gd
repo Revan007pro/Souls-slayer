@@ -1,14 +1,15 @@
 class_name arrow
 extends Node3D
 
-@export var speed := 40.8
-@export var gravity := 9.8
+@export var speed: float = 40.8
+@export var gravity: float = 9.8
 
 var velocity: Vector3
 var shoot_arrow := false
 
 func _ready():
 	Weapons.connect("shoot", Callable(self, "on_shoot"))
+
 
 func on_shoot() -> void:
 	if shoot_arrow:
