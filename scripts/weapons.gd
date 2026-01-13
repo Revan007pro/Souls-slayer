@@ -1,6 +1,11 @@
 class_name instanciar_armas extends Node
 
 
+var bone_shield: BoneAttachment3D = null
+var _shield: Node3D = null
+var escudo: Node3D
+var equiparCosas: bool = false
+var bone_scene: Node3D
 var anim_tree: AnimationTree
 var anim_playback: AnimationNodeStateMachinePlayback
 var goblin_instance: Node3D
@@ -11,12 +16,30 @@ var has_arrow: bool = false
 var shoot_arrow: bool = true
 var _sword_instance: Node3D
 signal shoot(disparar: bool)
-var flecha_actual: Node3D = null # <- ESTA ES LA CLAVE
+var flecha_actual: Node3D = null
+
+
 var armas: Dictionary = {
 	"bow": preload("res://bow.tscn"),
 	"arrow": preload("res://arrow.tscn"),
+	"escudoW": preload("res://escudo_escena.tscn"),
 	"sword": preload("res://sword.tscn")
 }
+
+
+func _escudo_() -> void:
+	#is_combact = true
+	if Inventario._inventario_.has("_escudo_"):
+		_shield = armas["escudoW"].instantiate()
+		bone_shield.add_child(_shield)
+		_shield.position = Vector3(0.039, 0.013, -0.013)
+		_shield.rotation_degrees = Vector3(-3.0, 74.7, 6.1)
+		_shield.name = "shieldEquiped"
+		
+	else:
+		_shield.queue_free()
+		_shield = null
+		#is_combact = false
 func set_anim_tree(tree: AnimationTree) -> void:
 	anim_tree = tree
 
@@ -24,6 +47,8 @@ func set_playback(pb: AnimationNodeStateMachinePlayback) -> void:
 	anim_playback = pb
 func set_goblin_instance(goblin: Node3D) -> void:
 	goblin_instance = goblin
+	bone_shield = goblin.get_node("Skeleton3D/shield") as BoneAttachment3D
+	bone_scene = goblin_instance.get_node("Skeleton3D/BoneAttacch2") as BoneAttachment3D
 func instaciar_bow() -> void:
 	if Inventario._inventario_.has("bow") and not bow_equipped:
 		var attach_point = goblin_instance.get_node("Skeleton3D/BoneAttacch2")
@@ -71,9 +96,11 @@ func ani_bow() -> void:
 			flecha_actual = null
 			has_arrow = false
 
-# En weapons.gd
 func _wait_sword() -> Node3D:
-	var bone_scene = goblin_instance.get_node("Skeleton3D/BoneAttachment3D")
+	if _sword_instance != null and is_instance_valid(_sword_instance):
+		return _sword_instance
+	
+	bone_scene = goblin_instance.get_node("Skeleton3D/BoneAttachment3D")
 	await get_tree().create_timer(0.7).timeout
 	_sword_instance = armas["sword"].instantiate() as Node3D
 	var attack_area = _sword_instance.get_node("AttackArea")
@@ -82,10 +109,149 @@ func _wait_sword() -> Node3D:
 	_sword_instance.position = Vector3(0.296, -0.002, 0.156)
 	_sword_instance.rotation_degrees = Vector3(1.7, 63.5, 143.8)
 	_sword_instance.name = "SwordEquipped"
-	return _sword_instance # ¡Retorna la espada!
+	return _sword_instance
 
-func animar_equipo() -> void:
-	var t = create_tween()
+func animar_escudo_a_espalda() -> void:
+	if equiparCosas or not _shield:
+		print("❌ No se puede animar: equiparCosas =", equiparCosas, ", _shield =", _shield)
+		return
+	
+	# Iniciar animación
+	equiparCosas = true
+	print("🛡️ Animando escudo a la espalda")
+	
+	# 1. Obtener el BoneAttachment3D de la espalda
+	var bone_espalda = bone_scene
+	if not bone_espalda:
+		print("❌ No se encontró BoneAttachment3D en la espalda")
+		equiparCosas = false
+		return
+	
+	# 2. Guardar posición global actual del escudo
+	var posicion_global_actual = _shield.global_transform
+	
+	# 3. Desconectar del bone actual (mano) y mover al jugador temporalmente
+	if _shield.get_parent() == bone_shield:
+		bone_shield.remove_child(_shield)
+	add_child(_shield)
+	_shield.global_transform = posicion_global_actual
 
-func renderizar_flecha() -> void:
-	pass
+	var posicion_objetivo_local = Vector3(0.010, 0.031, -0.106) # Exactamente como en tu captura
+	var rotacion_objetivo = Vector3(0.1, 87.9, 7.4) # Rotación de tu captura
+	var escala_objetivo = Vector3(0.585, 0.293, 0.29) # Escala de tu captura
+	
+	
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_QUAD)
+	tween.set_ease(Tween.EASE_IN_OUT)
+	
+
+	var posicion_global_objetivo = bone_espalda.to_global(posicion_objetivo_local)
+	
+
+	tween.tween_property(_shield, "global_position",
+						 posicion_global_objetivo, 0.5)
+	
+
+	tween.parallel().tween_property(_shield, "rotation_degrees",
+								   rotacion_objetivo, 0.5)
+	
+
+	tween.parallel().tween_property(_shield, "scale",
+								   escala_objetivo, 0.5)
+	
+	# 7. Esperar a que termine la animación
+	await tween.finished
+
+	# 8. Re-parentear al bone de la espalda
+	remove_child(_shield)
+	bone_espalda.add_child(_shield)
+	
+	# Establecer transformación LOCAL al bone (esto es clave)
+	_shield.position = posicion_objetivo_local # Posición LOCAL al bone
+	_shield.rotation_degrees = rotacion_objetivo
+	_shield.scale = escala_objetivo
+	
+	# 9. Finalizar
+	equiparCosas = false
+
+	if anim_playback:
+		anim_playback.travel("State")
+
+func animar_escudo_a_mano() -> void:
+	if equiparCosas or not _shield:
+		return
+	
+	equiparCosas = true
+
+
+	# Guardar posición global actual
+	var posicion_global_actual = _shield.global_transform
+	
+	# Obtener el bone de espalda actual
+	var bone_espalda = bone_scene
+	
+	# Desconectar de donde esté (espalda)
+	if _shield.get_parent() == bone_espalda:
+		bone_espalda.remove_child(_shield)
+	add_child(_shield)
+	_shield.global_transform = posicion_global_actual
+	
+	# Posición objetivo en la mano (valores originales)
+	var posicion_mano_local = Vector3(0.039, 0.013, -0.013)
+	var rotacion_mano_local = Vector3(-3.0, 74.7, 6.1)
+	var escala_mano_local = Vector3(0.585, 0.293, 0.29)
+	
+	# Crear tween
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_QUAD)
+	tween.set_ease(Tween.EASE_IN_OUT)
+	
+	# Calcular posición global objetivo (mano)
+	var posicion_global_mano = bone_shield.to_global(posicion_mano_local)
+	
+	# Animar
+	tween.tween_property(_shield, "global_position",
+						 posicion_global_mano, 0.5)
+	tween.parallel().tween_property(_shield, "rotation_degrees",
+								   rotacion_mano_local, 0.5)
+	tween.parallel().tween_property(_shield, "scale",
+								   escala_mano_local, 0.5)
+	
+	await tween.finished
+	
+	# Re-parentear al bone de la mano
+	remove_child(_shield)
+	bone_shield.add_child(_shield)
+	
+	# Establecer transformación local
+	_shield.position = posicion_mano_local
+	_shield.rotation_degrees = rotacion_mano_local
+	_shield.scale = escala_mano_local
+	
+	equiparCosas = false
+	print("✅ Escudo animado a la mano")
+	if anim_playback:
+		anim_playback.travel("State")
+
+func equipar_escudo() -> void:
+	var player = GameManager.player_instance
+	if player and player.has_method("set_combat_mode"):
+		player.set_combat_mode(true)
+	# O si la propiedad es pública:
+	if player and "is_combact" in player:
+		player.is_combact = true
+	if equiparCosas:
+		return
+		
+	if not Inventario._inventario_.has("_escudo_") or not _shield:
+		return
+	
+	# Determinar acción según dónde esté el escudo
+	var bone_espalda = bone_scene
+
+	
+	if _shield.get_parent() == bone_shield:
+		animar_escudo_a_espalda()
+	elif bone_espalda and _shield.get_parent() == bone_espalda:
+		animar_escudo_a_mano()

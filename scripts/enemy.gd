@@ -28,7 +28,7 @@ var is_dead: bool
 var State: bool
 var _damage_: bool
 signal golpe_conectado(damage: float)
-signal dead_signal(is_dead: bool)
+#signal dead_signal(muerto: bool)
 var health: float = 100
 
 # Variables de estado
@@ -50,7 +50,7 @@ func _ready():
 	if anim_tree:
 		anim_tree.active = true
 		anim_playback = anim_tree.get("parameters/playback")
-	add_to_group("enemy")
+	#add_to_group("enemy")
 
 func _physics_process(delta):
 	if is_dead:
@@ -158,16 +158,10 @@ func _rotate_to_target(direction: Vector3, delta: float):
 	rotation.z = 0
 
 		
-func _muerte_propia() -> void:
-	anim_playback.travel("ani_Dead")
-	await get_tree().create_timer(8.2).timeout
-	self.queue_free()
-	
-
 func take_damage(damage: float) -> void:
 	_damage_ = true
 	_salud.visible = true
-	anim_playback.travel("ani_Damage")
+	#anim_playback.travel("ani_Damage")
 	if is_dead:
 		return
 	
@@ -181,6 +175,9 @@ func take_damage(damage: float) -> void:
 	
 	if health <= 0:
 		is_dead = true
-		dead_signal.emit(is_dead)
-		print("Emitir señal \"muerto\"")
-		_muerte_propia()
+		#dead_signal.emit(is_dead)
+		muerte_signal()
+		print("esta es mi señal", is_dead)
+		anim_playback.travel("ani_Dead")
+		await get_tree().create_timer(8.2).timeout
+		self.queue_free()

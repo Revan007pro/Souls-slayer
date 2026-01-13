@@ -114,3 +114,15 @@ func tween_call_back(inv, nueva_textura, pos_inicial, icon, direccion) -> void:
 	)
 
 	t.tween_property(inv, "position", pos_inicial, 1.05)
+
+func contador() -> void:
+	var cont = ui.get_node("Panel/contador")
+	if cont:
+		cont.text = str(GameManager.souls)
+		if not GameManager.souls_changed.is_connected(_actualizar_contador):
+			GameManager.souls_changed.connect(_actualizar_contador)
+
+func _actualizar_contador(new_count: int) -> void:
+	var cont = ui.get_node("Panel/contador")
+	if cont:
+		cont.text = str(new_count)

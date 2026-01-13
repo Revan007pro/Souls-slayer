@@ -1,5 +1,11 @@
 extends Node
 
+signal enemy_killed()
+signal souls_changed(new_count: int)
+
+var souls: int = 0
+
+
 @onready var _player_recurrente: PackedScene = preload("res://player_escena.tscn")
 var player_instance: Node3D
 var cambiar: bool
@@ -8,6 +14,20 @@ var escenas_mundo: Dictionary = {
 	"next_scene_packed": "res://prueba_1.tscn"
 }
 
+func add_souls(amount: int = 1) -> void:
+	souls += amount
+	souls_changed.emit(souls)
+	print("Souls totales:", souls)
+
+func _add_souls_internal(amount: int = 1) -> void:
+	souls += amount
+	souls_changed.emit(souls)
+	print("Souls totales:", souls)
+	
+static func add_souls_static(amount: int = 1) -> void:
+	if Engine.has_singleton("GameManager"):
+		var gm = Engine.get_singleton("GameManager")
+		gm.add_souls(amount)
 
 func change_scene_via_portal(scene_key: String) -> void:
 	if escenas_mundo.has(scene_key):

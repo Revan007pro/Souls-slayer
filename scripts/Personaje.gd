@@ -3,7 +3,8 @@ extends CharacterBody3D
 
 class_name Personaje
 var gravedad: float = 9.8
-var _subio_nivel:bool
+var _subio_nivel: bool
+signal dead_signal(muerto: bool)
 
 
 var _atributos: Dictionary = {
@@ -15,13 +16,18 @@ var _atributos: Dictionary = {
 	"defensa": 10,
 	"suerte": 10
 }
-var _salud_actual: int=100
+var _salud_actual: int = 100
 var _mana_actual: int
 var _nivel: int = 1
 var _puntos_de_habilidad: int = 0
 var _exp_actual: int = 0
 var _exp_proximo_nivel: int = 100
-var _damage:int=10
+var _damage: int = 10
+
+func muerte_signal(muerto: bool = true) -> void:
+	emit_signal("dead_signal", muerto)
+	print("estoy muerto")
+
 
 func recibir_daño(cantidad: int) -> void:
 	_salud_actual -= cantidad
@@ -37,13 +43,13 @@ func subir_nivel() -> void:
 	_nivel += 1
 	_exp_proximo_nivel = int(_exp_proximo_nivel * 1.5)
 	print("¡Subiste al nivel ", _nivel, "!")
-	_atributos["fuerza"] +=2
-	_atributos["Aguante"] +=3 
-	_atributos["destreza"] +=2 
-	_atributos["magia"]+=2
-	_atributos["vitalidad"]+=2
-	_atributos["defensa"]+=7
-	_atributos["suerte"]+=4
+	_atributos["fuerza"] += 2
+	_atributos["Aguante"] += 3
+	_atributos["destreza"] += 2
+	_atributos["magia"] += 2
+	_atributos["vitalidad"] += 2
+	_atributos["defensa"] += 7
+	_atributos["suerte"] += 4
 	print(_atributos)
 
 func ganar_exp(cantidad: int) -> void:
@@ -56,28 +62,26 @@ func clase_guerrero() -> void:
 	_atributos["fuerza"] = 14
 	_atributos["Aguante"] = 12
 	_atributos["destreza"] = 12
-	_atributos["magia"]=6
-	_atributos["vitalidad"]=100
-	_atributos["defensa"]=7
-	_atributos["suerte"]=10
+	_atributos["magia"] = 6
+	_atributos["vitalidad"] = 100
+	_atributos["defensa"] = 7
+	_atributos["suerte"] = 10
 
-func clase_mago() ->void:
-	_atributos["Fuerza"]=7
-	_atributos["Aguante"]=9
-	_atributos["destreza"]=10
-	_atributos["vitalidad"]=100
-	_atributos["magia"]=14
-	_atributos["defensa"]=7
-	_atributos["suerte"]=10
+func clase_mago() -> void:
+	_atributos["Fuerza"] = 7
+	_atributos["Aguante"] = 9
+	_atributos["destreza"] = 10
+	_atributos["vitalidad"] = 100
+	_atributos["magia"] = 14
+	_atributos["defensa"] = 7
+	_atributos["suerte"] = 10
 
 
-func _aplicar_gravedad(delta:float) -> void:
+func _aplicar_gravedad(delta: float) -> void:
 	if not is_on_floor():
-		velocity.y -=gravedad *delta
+		velocity.y -= gravedad * delta
 	else:
-		velocity.y=0
-
+		velocity.y = 0
 
 
 #@export var owner_node: Node = null 
-

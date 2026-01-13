@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dl0wxmfcihyvx"]
+[gd_scene load_steps=11 format=3 uid="uid://dl0wxmfcihyvx"]
 
 [ext_resource type="Script" uid="uid://m8m6msav2jrv" path="res://scripts/player.gd" id="1_wvlaw"]
 [ext_resource type="PackedScene" uid="uid://b6vrdgxpuou7p" path="res://healt.tscn" id="4_2les7"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bjlyrfcmnu7ii" path="res://Menu/Copilot_20251117_155656.png" id="5_far6r"]
 [ext_resource type="Texture2D" uid="uid://cy6o0e4urcwnh" path="res://Imagenes/Inventario.png" id="5_o77oc"]
 [ext_resource type="AudioStream" uid="uid://crtuc0q8od1p3" path="res://sonidos/sanido_muerte.mp3" id="5_xe1mq"]
+[ext_resource type="AudioStream" uid="uid://c0ejnl26b8y13" path="res://sonidos/desvainar.mp3" id="7_far6r"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_far6r"]
 radius = 0.052734375
@@ -121,6 +122,20 @@ offset_bottom = 578.0
 texture = ExtResource("5_o77oc")
 expand_mode = 1
 
+[node name="Panel" type="Panel" parent="CanvasLayer/CanvasLayer"]
+anchors_preset = -1
+anchor_bottom = 0.076000005
+offset_left = 949.0
+offset_top = 514.0
+offset_right = 989.0
+offset_bottom = 504.75198
+
+[node name="contador" type="Label" parent="CanvasLayer/CanvasLayer/Panel"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+horizontal_alignment = 1
+
 [node name="Slot2" type="TextureRect" parent="CanvasLayer"]
 clip_children = 2
 offset_left = 78.00006
@@ -129,9 +144,6 @@ offset_right = 1102.0
 offset_bottom = 1953.0
 scale = Vector2(0.06, 0.06)
 texture = ExtResource("5_far6r")
-
-[node name="dead_sonido" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("5_xe1mq")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." groups=["Player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7378235, 0)
@@ -150,6 +162,18 @@ shape = SubResource("BoxShape3D_far6r")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="area_player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55294347, 0.25708008)
 shape = SubResource("BoxShape3D_2les7")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="dead_sonido" type="AudioStreamPlayer" parent="Control"]
+stream = ExtResource("5_xe1mq")
+
+[node name="desvainar" type="AudioStreamPlayer" parent="Control"]
+stream = ExtResource("7_far6r")
 
 [connection signal="dead_signal" from="." to="." method="_on_dead_signal"]
 [connection signal="area_entered" from="area_player" to="." method="_on_area_3d_area_entered"]

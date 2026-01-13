@@ -5,21 +5,18 @@ class_name player
 @export var speed: float = 5.0
 @export var acceleration: float = 75.0
 @export var fuerza_salto: float = 4.5
-@export var _enemy: PackedScene
 @export var _goblin_fbx: PackedScene
-@onready var _escudo: PackedScene = preload("res://escudo_escena.tscn")
 const Agregar = preload("res://dialogues_pruebas/Agregar.dialogue")
 
 var _goblin_instance: Node3D
-var _arma_instancia = Node
 var anim_tree: AnimationTree
-var _shield: Node3D
-var bone_shield: BoneAttachment3D
-var bone_scene: BoneAttachment3D
 var _dialogue_balloon = null
 var is_combact: bool = false
 var _dialogue_active = false
 var tengo_escudo: bool = false
+
+enum SwordState {NONE, DRAWING, DRAWN, SHEATHING, ATTACKING}
+var sword_state: SwordState = SwordState.NONE
 
 
 @onready var pivote: Node3D = $Pivote
@@ -27,10 +24,11 @@ var tengo_escudo: bool = false
 @onready var ray_suelo: RayCast3D = $RayCast3D
 @onready var _salud: ProgressBar = $CanvasLayer/healt
 @onready var _stamina: ProgressBar = $CanvasLayer/healt/Stamina
-@onready var death_sound: AudioStreamPlayer = $dead_sonido
+@onready var death_sound: AudioStreamPlayer = $Control/dead_sonido
+@onready var desvainar_soni: AudioStreamPlayer = $Control/desvainar
 
 
-signal dead_signal(is_dead: bool)
+#signal dead_signal(is_dead: bool)
 var is_dead: bool = false
 
 var health: float = 100.0
@@ -63,8 +61,18 @@ var sensibilidad_camara: float = 0.5
 #var inventario_instancia: _inventario = _inventario.new()
 signal recoger_objeto(area: Area3D)
 var objeto_cercano: Area3D = null
+var souls: int = 0
+@onready var Enemy: Node3D = get_tree().get_first_node_in_group("enemy")
+
 @onready var ui = get_tree().get_first_node_in_group("UI")
 func _ready() -> void:
+	if Enemy:
+		Enemy.dead_signal.connect(func(muerto: bool):
+			if muerto:
+				GameManager.add_souls(1)
+				print("Souls:", GameManager.souls)
+		)
+	
 	clase_guerrero()
 	GameManager.player_instance = self
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
@@ -73,7 +81,7 @@ func _ready() -> void:
 	Weapons.set_goblin_instance(_goblin_instance)
 	anim_tree = _goblin_instance.get_node("anim_tree")
 	
-	bone_shield = _goblin_instance.get_node("Skeleton3D/shield")
+	
 	if anim_tree:
 		anim_playback = anim_tree.get("parameters/playback")
 	Weapons.set_anim_tree(anim_tree)
@@ -84,11 +92,13 @@ func _deferred_ready() -> void:
 		play_get_up_animation()
 	
 func _physics_process(delta: float) -> void:
+	Inventario.contador()
 	if not _salud.is_inside_tree():
 		print("⚠️ BARRA NO ESTÁ EN EL ÁRBOL")
 	if is_dead:
 		return
 	parry()
+	nex_level()
 	Weapons.instaciar_bow()
 	Weapons.ani_bow()
 	Inventario.invetarioPlayer()
@@ -109,13 +119,13 @@ func _physics_process(delta: float) -> void:
 		print("✅ Jugador recogió:", objeto_cercano.name)
 		objeto_cercano = null
 	
-
+	
 func conectar_signal(area: Area3D, ui) -> void:
 	if Input.is_action_just_pressed("Dialogue") and objeto_cercano:
 		Inventario._inventario_.append(String(area.name))
 	if Input.is_action_just_pressed("Dialogue") and Inventario._inventario_.has("_escudo_"):
 		print("escudo en el inventario")
-		_escudo_()
+		Weapons._escudo_()
 	Inventario.actualizar_slots(ui)
 	if Inventario.open_inventario:
 		_camera_can_move = false
@@ -146,40 +156,48 @@ func _movimiento_jugador(delta: float) -> void:
 
 func _desvainar_espada() -> void:
 	if Input.is_action_just_pressed("desvainar") and Inventario._inventario_.has("espada"):
-		if !_desvainar:
-			print("espada en el inventario")
-			_desvainar = true
-			is_combact = true
-			Weapons._wait_sword()
-			anim_playback.travel("Ani_player_Desvainar")
-			print("Animación desvainar")
-			await get_tree().create_timer(1.6).timeout
-			_desvainar_with = true
-			anim_playback.travel("With")
-			print("Espada desvainada")
-		elif _desvainar_with:
-			is_combact = false
-			anim_playback.travel("Ani_player_Envainar")
-			print("Animación envainar")
-			await get_tree().create_timer(1.1).timeout
-			_desvainar = false
-			_desvainar_with = false
-			bone_scene.remove_child(Weapons._sword_instance)
-			anim_playback.travel("State")
-			print("Espada envainada")
+		match sword_state:
+			SwordState.NONE:
+				# Desvainar
+				sword_state = SwordState.DRAWING
+				is_combact = true
+				anim_playback.travel("Ani_player_Desvainar")
+				await Weapons._wait_sword()
+				desvainar_soni.play()
+				print("Animación desvainar")
+				await get_tree().create_timer(0.8).timeout
+				sword_state = SwordState.DRAWN
+				_desvainar_with = true
+				anim_playback.travel("With")
+				print("Espada desvainada")
+				
+			SwordState.DRAWN:
+				# Envainar
+				sword_state = SwordState.SHEATHING
+				is_combact = false
+				anim_playback.travel("Ani_player_Envainar")
+				print("Animación envainar")
+				await get_tree().create_timer(1.1).timeout
+				
+				# Eliminar espada
+				if Weapons.bone_scene != null and Weapons._sword_instance != null:
+					Weapons.bone_scene.remove_child(Weapons._sword_instance)
+					Weapons._sword_instance.queue_free()
+					Weapons._sword_instance = null
+				
+				sword_state = SwordState.NONE
+				_desvainar_with = false
+				anim_playback.travel("State")
+				print("Espada envainada")
+	
 	anim_tree.set("parameters/With/blend_position", _vector2)
 
-func equipar() -> void:
-	if equiparCosas:
-		return
-	if Input.is_action_just_pressed("equipar"):
-		equiparCosas = true
-		anim_playback.travel("Ani_player_equipar")
-		print("equipando")
 
-		await get_tree().create_timer(1.1).timeout
-		equiparCosas = false
-		_set_state("State")
+func equipar() -> void:
+	if Input.is_action_just_pressed("equipar") and Inventario._inventario_.has("_escudo_"):
+		anim_playback.travel("Ani_player_equipar")
+		await get_tree().create_timer(0.5).timeout
+		Weapons.equipar_escudo()
 
 
 func _bloquear() -> void:
@@ -232,8 +250,8 @@ func _salto_jugador():
 		anim_playback.travel("State")
 
 func _input(event: InputEvent) -> void:
-	var _enemigo_instancia = get_tree().get_first_node_in_group("enemy")
-	const ZOOM_MIN: float = -1.0
+	var _enemigo_instancia = enemy
+	const ZOOM_MIN: float = 0.005
 	const ZOOM_MAX: float = -5.0
 	
 	if is_dead:
@@ -261,24 +279,20 @@ func _input(event: InputEvent) -> void:
 
 
 	elif Input.is_action_just_pressed("fijar"):
-		if _enemigo_instancia:
-			_camara.look_at(_enemigo_instancia.global_position)
+		if Enemy:
+			_camara.look_at(Enemy.global_position)
 
-# En player.gd
-func esperar() -> void:
-	await get_tree().create_timer(0.8).timeout
-	var sword = await Weapons._wait_sword() # ¡Usa await!
-	var attack_area = sword.get_node("AttackArea")
-	attack_area.monitoring = true
 
 func is_attaacking() -> void:
-	if Input.is_action_just_pressed("attack") and _desvainar == true:
-		esperar()
+	if Input.is_action_just_pressed("attack") and sword_state == SwordState.DRAWN:
 		is_combact = true
 		var can_attack: int = 30
 		if _stamina.value < can_attack:
 			print("Sin stamina, no puedes atacar")
 			return
+		
+		# Cambiar estado a ATTACKING
+		sword_state = SwordState.ATTACKING
 		is_attacking = true
 		self._stamina.value -= can_attack
 		self._stamina.max_value = 100
@@ -286,7 +300,9 @@ func is_attaacking() -> void:
 		
 		await get_tree().create_timer(1.6667).timeout
 		
+		# Regresar a estado DRAWN
 		is_attacking = false
+		sword_state = SwordState.DRAWN # Solo esto
 		if not is_dead:
 			anim_playback.travel("With")
 
@@ -333,20 +349,6 @@ func _regenerar_stamina() -> void:
 		self._stamina.value += stamina_mas
 		break
 
-func _escudo_() -> void:
-	is_combact = true
-	if Inventario._inventario_.has("_escudo_"):
-		_shield = _escudo.instantiate() as Node3D
-		bone_shield.add_child(_shield)
-		_shield.position = Vector3(0.039, 0.013, -0.013)
-		_shield.rotation_degrees = Vector3(-3.0, 74.7, 6.1)
-		_shield.name = "shieldEquiped"
-		
-	else:
-		_shield.queue_free()
-		_shield = null
-		is_combact = false
-
 
 func _on_area_3d_area_entered(area: Area3D) -> void:
 	#var armas = get_tree().get_first_node_in_group("Arma")
@@ -372,6 +374,10 @@ func _on_area_3d_area_exited(area: Area3D) -> void:
 		objeto_cercano = null
 		print("⛔ Te alejaste del objeto")
 
+
+func nex_level() -> void:
+	if souls > 1:
+		print("puedes subir nievel")
 
 # En player.gd (el script que tiene la AnimationPlayer)
 

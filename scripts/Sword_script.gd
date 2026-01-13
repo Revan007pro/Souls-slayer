@@ -3,15 +3,7 @@ extends Node3D
 @onready var attack_area := find_child("AttackArea", true, false) as Area3D
 
 
-#var sword_scene: PackedScene = preload("res://sword.tscn")
-#var sword: Node3D
-#var attack_area: Area3D
-
 @export var damage_amount: float = 10
-
-#func _ready():
-#	sword = sword_scene.instantiate()
-#	attack_area = sword.get_node("AttackArea")
 
 
 signal conectar_golpe(damage: float)
