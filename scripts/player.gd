@@ -194,7 +194,7 @@ func _desvainar_espada() -> void:
 
 
 func equipar() -> void:
-	if Input.is_action_just_pressed("equipar") and Inventario._inventario_.has("_escudo_"):
+	if Input.is_action_just_pressed("equipar") and not Inventario._inventario_.has(Weapons.armas):
 		anim_playback.travel("Ani_player_equipar")
 		await get_tree().create_timer(0.5).timeout
 		Weapons.equipar_escudo()

@@ -2,7 +2,9 @@ class_name instanciar_armas extends Node
 
 
 var bone_shield: BoneAttachment3D = null
+var attach_point: BoneAttachment3D = null
 var _shield: Node3D = null
+var bow_instance: Node3D = null
 var escudo: Node3D
 var equiparCosas: bool = false
 var bone_scene: Node3D
@@ -49,16 +51,86 @@ func set_goblin_instance(goblin: Node3D) -> void:
 	goblin_instance = goblin
 	bone_shield = goblin.get_node("Skeleton3D/shield") as BoneAttachment3D
 	bone_scene = goblin_instance.get_node("Skeleton3D/BoneAttacch2") as BoneAttachment3D
+	attach_point = goblin_instance.get_node("Skeleton3D/BoneAttacch3") as BoneAttachment3D
 func instaciar_bow() -> void:
-	if Inventario._inventario_.has("bow") and not bow_equipped:
-		var attach_point = goblin_instance.get_node("Skeleton3D/BoneAttacch2")
-		var bow_instance = armas["bow"].instantiate()
-		bow_instance.position = Vector3(-0.05, 0, -0.126)
-		bow_instance.rotation_degrees = Vector3(0, 90.9, 0)
-		bow_instance.name = "arco"
-		attach_point.add_child(bow_instance)
-		bow_equipped = true
+	if Inventario._inventario_.has("bow") and not bow_equipped and not Inventario._inventario_.has("escudoW"):
+		if not Inventario._inventario_.has("_escudo_"):
+			attach_point = goblin_instance.get_node("Skeleton3D/BoneAttacch3")
+			bow_instance = armas["bow"].instantiate()
+			#bow_instance.position = Vector3(-0.05, 0, -0.126) posicion de la espalda
+			#bow_instance.rotation_degrees = Vector3(0, 90.9, 0)
+			bow_instance.position = Vector3(-0.037, -0.005, -0.001)
+			bow_instance.rotation_degrees = Vector3(49.7, 23.2, 82.8)
+			bow_instance.name = "arco"
+			attach_point.add_child(bow_instance)
+			bow_equipped = true
 
+			
+func animar_bow_espalda() -> void:
+	if equiparCosas or not _shield:
+		print("❌ No se puede animar: equiparCosas =", equiparCosas, ", _shield =", _shield)
+		return
+	equiparCosas = true
+	print("🛡️ Animando arco a la espalda")
+	
+	# 1. Obtener el BoneAttachment3D de la espalda
+	var bone_espalda = bone_scene
+	if not bone_espalda:
+		print("❌ No se encontró BoneAttachment3D en la espalda")
+		equiparCosas = false
+		return
+	
+	# 2. Guardar posición global actual del escudo
+	var posicion_global_actual = bow_instance.global_transform
+	
+	# 3. Desconectar del bone actual (mano) y mover al jugador temporalmente
+	if bow_instance.get_parent() == attach_point:
+		attach_point.remove_child(bow_instance)
+	add_child(bow_instance)
+	bow_instance.global_transform = posicion_global_actual
+
+	var posicion_objetivo_local = Vector3(0.010, 0.031, -0.106) # Exactamente como en tu captura
+	var rotacion_objetivo = Vector3(0.1, 87.9, 7.4) # Rotación de tu captura
+	var escala_objetivo = Vector3(0.585, 0.293, 0.29) # Escala de tu captura
+	
+	
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_QUAD)
+	tween.set_ease(Tween.EASE_IN_OUT)
+	
+
+	var posicion_global_objetivo = bone_espalda.to_global(posicion_objetivo_local)
+	
+
+	tween.tween_property(bow_instance, "global_position",
+						 posicion_global_objetivo, 0.5)
+	
+
+	tween.parallel().tween_property(bow_instance, "rotation_degrees",
+								   rotacion_objetivo, 0.5)
+	
+
+	tween.parallel().tween_property(bow_instance, "scale",
+								   escala_objetivo, 0.5)
+	
+	# 7. Esperar a que termine la animación
+	await tween.finished
+
+	# 8. Re-parentear al bone de la espalda
+	remove_child(bow_instance)
+	bone_espalda.add_child(bow_instance)
+	
+	# Establecer transformación LOCAL al bone (esto es clave)
+	bow_instance.position = posicion_objetivo_local # Posición LOCAL al bone
+	bow_instance.rotation_degrees = rotacion_objetivo
+	bow_instance.scale = escala_objetivo
+	
+	# 9. Finalizar
+	equiparCosas = false
+
+	if anim_playback:
+		anim_playback.travel("State")
+	
 
 func ani_bow() -> void:
 	var punto = goblin_instance.get_node("Skeleton3D/finger")
@@ -100,7 +172,7 @@ func _wait_sword() -> Node3D:
 	if _sword_instance != null and is_instance_valid(_sword_instance):
 		return _sword_instance
 	
-	bone_scene = goblin_instance.get_node("Skeleton3D/BoneAttachment3D")
+	bone_sceene = goblin_instance.get_node("Skeleton3D/BoneAttachment3D")
 	await get_tree().create_timer(0.7).timeout
 	_sword_instance = armas["sword"].instantiate() as Node3D
 	var attack_area = _sword_instance.get_node("AttackArea")
@@ -238,20 +310,42 @@ func equipar_escudo() -> void:
 	var player = GameManager.player_instance
 	if player and player.has_method("set_combat_mode"):
 		player.set_combat_mode(true)
-	# O si la propiedad es pública:
+
 	if player and "is_combact" in player:
 		player.is_combact = true
+
 	if equiparCosas:
 		return
-		
-	if not Inventario._inventario_.has("_escudo_") or not _shield:
-		return
-	
-	# Determinar acción según dónde esté el escudo
+
 	var bone_espalda = bone_scene
 
-	
-	if _shield.get_parent() == bone_shield:
-		animar_escudo_a_espalda()
-	elif bone_espalda and _shield.get_parent() == bone_espalda:
-		animar_escudo_a_mano()
+	# 🔒 valores seguros (CLAVE)
+	var shield_parent = _shield.get_parent() if _shield else null
+	var bow_parent = bow_instance.get_parent() if bow_instance else null
+
+	match [shield_parent, bow_parent]:
+		# ESCUDO EN MANO → ESPALDA
+		[bone_shield, _]:
+			animar_escudo_a_espalda()
+			print("llamando al escudo")
+
+		# ESCUDO EN ESPALDA → MANO
+		[bone_espalda, _]:
+			animar_escudo_a_mano()
+			print("volviendo a la mano al escudo")
+
+		# ARCO EN MANO → ESPALDA
+		[_, attach_point]:
+			animar_bow_espalda()
+			print("llamando al arco")
+
+	# ARCO YA EN ESPALDA → (si luego haces volver a mano)
+		[_, bone_espalda]:
+			animar_bow_espalda()
+			print("arco ya en espalda")
+
+		_:
+			print("no se encontro los nodos:",
+				  "shield:", shield_parent,
+				  "bow:", bow_parent)
+			print("bow parent path:", bow_parent.get_path())
