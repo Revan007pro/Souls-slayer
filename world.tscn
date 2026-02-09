@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bd5yprjvgjfqq"]
+[gd_scene load_steps=16 format=3 uid="uid://bd5yprjvgjfqq"]
 
 [ext_resource type="PackedScene" uid="uid://eri7lkn1barl" path="res://Medieval Village MegaKit[Standard]/FBX/Floor_RedBrick.fbx" id="1_aqk2v"]
 [ext_resource type="Script" uid="uid://bkis1ptrgt3i8" path="res://scripts/GameManager.gd" id="1_gbfbk"]
@@ -19,6 +19,17 @@ size = Vector3(0.506638, 0.121826, 0.967467)
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_wse8f"]
 radius = 1.0995203
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ioo17"]
+sky_top_color = Color(0.24617267, 0.58141667, 0.61535066, 1)
+sky_curve = 0.27990997
+
+[sub_resource type="Sky" id="Sky_wse8f"]
+sky_material = SubResource("ProceduralSkyMaterial_ioo17")
+
+[sub_resource type="Environment" id="Environment_ic0uy"]
+background_mode = 2
+sky = SubResource("Sky_wse8f")
 
 [node name="Node3D" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.168354, 0, 0)
@@ -316,5 +327,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4829893, 0.5233498, 2.10944
 
 [node name="Enemy" parent="." instance=ExtResource("9_ioo17")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.066681, 0.023349367, 2.6730087)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_ic0uy")
 
 [connection signal="area_entered" from="Portal_1/Area" to="Portal_1" method="_on_area_area_entered"]

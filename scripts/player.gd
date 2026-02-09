@@ -75,6 +75,10 @@ func _ready() -> void:
 	
 	clase_guerrero()
 	GameManager.player_instance = self
+
+	Weapons.set_player_camera_reference(_camara, pivote) # pasa la referencia de la camara al script de wapons
+	#Weapons.set_goblin_instance(_goblin_instance)
+
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	_goblin_instance = _goblin_fbx.instantiate()
 	add_child(_goblin_instance)
@@ -116,9 +120,9 @@ func _physics_process(delta: float) -> void:
 		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	if Input.is_action_just_pressed("Dialogue") and objeto_cercano:
 		emit_signal("recoger_objeto", objeto_cercano)
-		print("✅ Jugador recogió:", objeto_cercano.name)
+		print("Jugador recogió:", objeto_cercano.name)
 		objeto_cercano = null
-	
+
 	
 func conectar_signal(area: Area3D, ui) -> void:
 	if Input.is_action_just_pressed("Dialogue") and objeto_cercano:
@@ -276,6 +280,10 @@ func _input(event: InputEvent) -> void:
 
 	if event.is_action_pressed("rigth"):
 		Inventario.cambiar_icono(1, ui.get_node("Icon3"), ui.get_node("Icon3"))
+
+	if event.is_action_pressed("block") and Inventario._inventario_.has("bow"):
+		# Cambiar a modo combate INMEDIATAMENTE
+		is_combact = true
 
 
 	elif Input.is_action_just_pressed("fijar"):

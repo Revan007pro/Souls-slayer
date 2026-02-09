@@ -19,6 +19,13 @@ var shoot_arrow: bool = true
 var _sword_instance: Node3D
 signal shoot(disparar: bool)
 var flecha_actual: Node3D = null
+var gamer = GameManager.player_instance
+
+var player_camera: Camera3D = null
+var camera_pivot: Node3D = null
+var camera_offset_active: bool = false
+var original_camera_pos: Vector3
+var original_pivot_pos: Vector3
 
 
 var armas: Dictionary = {
@@ -52,6 +59,18 @@ func set_goblin_instance(goblin: Node3D) -> void:
 	bone_shield = goblin.get_node("Skeleton3D/shield") as BoneAttachment3D
 	bone_scene = goblin_instance.get_node("Skeleton3D/BoneAttacch2") as BoneAttachment3D
 	attach_point = goblin_instance.get_node("Skeleton3D/BoneAttacch3") as BoneAttachment3D
+
+
+func set_player_camera_reference(camera: Camera3D, pivot: Node3D):
+	player_camera = camera
+	camera_pivot = pivot
+	if player_camera:
+		original_camera_pos = player_camera.position
+	if camera_pivot:
+		original_pivot_pos = camera_pivot.position
+	print("✅ Referencia de cámara recibida")
+
+
 func instaciar_bow() -> void:
 	if Inventario._inventario_.has("bow") and not bow_equipped and not Inventario._inventario_.has("escudoW"):
 		if not Inventario._inventario_.has("_escudo_"):
@@ -64,12 +83,51 @@ func instaciar_bow() -> void:
 			bow_instance.name = "arco"
 			attach_point.add_child(bow_instance)
 			bow_equipped = true
-
 			
+
+func move_camera_to_shoulder():
+	camera_offset_active = true
+		
+		# Crear tween para movimiento suave
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_CUBIC)
+	tween.set_ease(Tween.EASE_OUT)
+	
+	# Mover la cámara (no el pivote) para efecto de hombro
+	var target_position = Vector3(-0.198, -0.05, 0) # Derecha y un poco arriba
+	
+	tween.tween_property(player_camera, "position",
+		target_position,
+		0.4 # Duración en segundos
+	)
+
+	tween.parallel().tween_property(player_camera, "fov",
+		player_camera.fov - 5.0, # Un poco más zoom
+		0.3
+	)
+	
+
+func reset_camera_position():
+	camera_offset_active = false
+	
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_CUBIC)
+	tween.set_ease(Tween.EASE_OUT)
+	
+	# Volver a posición original
+	tween.tween_property(player_camera, "position",
+		original_camera_pos,
+		0.4
+	)
+	
+	# Restaurar FOV
+	tween.parallel().tween_property(player_camera, "fov",
+		player_camera.fov + 5.0,
+		0.3
+	)
+	
+
 func animar_bow_espalda() -> void:
-	if equiparCosas or not _shield:
-		print("❌ No se puede animar: equiparCosas =", equiparCosas, ", _shield =", _shield)
-		return
 	equiparCosas = true
 	print("🛡️ Animando arco a la espalda")
 	
@@ -89,9 +147,9 @@ func animar_bow_espalda() -> void:
 	add_child(bow_instance)
 	bow_instance.global_transform = posicion_global_actual
 
-	var posicion_objetivo_local = Vector3(0.010, 0.031, -0.106) # Exactamente como en tu captura
-	var rotacion_objetivo = Vector3(0.1, 87.9, 7.4) # Rotación de tu captura
-	var escala_objetivo = Vector3(0.585, 0.293, 0.29) # Escala de tu captura
+	var posicion_objetivo_local = Vector3(0.010, 0.031, -0.106) # posicion de la figura
+	var rotacion_objetivo = Vector3(0.1, -87.9, 7.4) # se invierte el eje y para que quede del otro lado
+	var escala_objetivo = Vector3(0.898, 0.785, 0.845) # un poco mas quequeño
 	
 	
 	var tween = create_tween()
@@ -130,14 +188,68 @@ func animar_bow_espalda() -> void:
 
 	if anim_playback:
 		anim_playback.travel("State")
+
+func animar_bow_a_mano() -> void:
+	equiparCosas = true
+
+
+	# Guardar posición global actual
+	var posicion_global_actual = bow_instance.global_transform
+	
+	# Obtener el bone de espalda actual
+	var bone_espalda = bone_scene
+	
+	# Desconectar de donde esté (espalda)
+	if bow_instance.get_parent() == bone_espalda:
+		bone_espalda.remove_child(bow_instance)
+	add_child(bow_instance)
+	bow_instance.global_transform = posicion_global_actual
+	
+	# Posición objetivo en la mano (valores originales)
+	var posicion_mano_local = Vector3(-0.037, -0.005, -0.001)
+	var rotacion_mano_local = Vector3(49.7, 23.2, 82.8)
+	#var escala_mano_local = Vector3(0.585, 0.293, 0.29)
+	
+	# Crear tween
+	var tween = create_tween()
+	tween.set_trans(Tween.TRANS_QUAD)
+	tween.set_ease(Tween.EASE_IN_OUT)
+	
+	# Calcular posición global objetivo (mano)
+	var posicion_global_mano = attach_point.to_global(posicion_mano_local)
+	
+	# Animar
+	tween.tween_property(bow_instance, "global_position",
+						 posicion_global_mano, 0.5)
+	tween.parallel().tween_property(bow_instance, "rotation_degrees",
+								   rotacion_mano_local, 0.5)
+	#tween.parallel().tween_property(_shield, "scale",
+	#							   escala_mano_local, 0.5)
+	
+	await tween.finished
+	
+	# Re-parentear al bone de la mano
+	remove_child(bow_instance)
+	attach_point.add_child(bow_instance)
+	
+	# Establecer transformación local
+	bow_instance.position = posicion_mano_local
+	bow_instance.rotation_degrees = rotacion_mano_local
+	#bow_instance.scale = escala_mano_local
+	
+	equiparCosas = false
+	print("animacion del arco a la mano")
+	if anim_playback:
+		anim_playback.travel("State")
 	
 
 func ani_bow() -> void:
 	var punto = goblin_instance.get_node("Skeleton3D/finger")
+	var diana = Inventario.ui.get_node("Panel/diana")
 
 	if Inventario._inventario_.has("bow"):
-		# SOLO UNA VEZ
 		if Input.is_action_just_pressed("block") and flecha_actual == null:
+			# hay un bug corregir que solo si se tiene el arco pueda hacer el zoom
 			ready_to_shoot = true
 			has_arrow = true
 			anim_playback.travel("Ani_player_arrow_01")
@@ -152,6 +264,9 @@ func ani_bow() -> void:
 			flecha_actual.position = Vector3(0.048, -0.229, 0.011)
 			flecha_actual.rotation_degrees = Vector3(-15.4, 164.0, 178.6)
 			flecha_actual.scale = Vector3(0.172, 0.472, 0.208)
+			diana.visible = true
+			move_camera_to_shoulder()
+			
 
 		elif Input.is_action_just_released("block") and flecha_actual != null:
 			# guardar transform global
@@ -167,12 +282,14 @@ func ani_bow() -> void:
 
 			flecha_actual = null
 			has_arrow = false
+			diana.visible = false
+			reset_camera_position()
 
 func _wait_sword() -> Node3D:
 	if _sword_instance != null and is_instance_valid(_sword_instance):
 		return _sword_instance
 	
-	bone_sceene = goblin_instance.get_node("Skeleton3D/BoneAttachment3D")
+	bone_scene = goblin_instance.get_node("Skeleton3D/BoneAttachment3D")
 	await get_tree().create_timer(0.7).timeout
 	_sword_instance = armas["sword"].instantiate() as Node3D
 	var attack_area = _sword_instance.get_node("AttackArea")
@@ -307,41 +424,31 @@ func animar_escudo_a_mano() -> void:
 		anim_playback.travel("State")
 
 func equipar_escudo() -> void:
-	var player = GameManager.player_instance
-	if player and player.has_method("set_combat_mode"):
-		player.set_combat_mode(true)
+	if gamer and gamer.has_method("set_combat_mode"):
+		gamer.set_combat_mode(true)
 
-	if player and "is_combact" in player:
-		player.is_combact = true
+	if gamer and "is_combact" in gamer:
+		gamer.is_combact = true
 
 	if equiparCosas:
 		return
 
 	var bone_espalda = bone_scene
 
-	# 🔒 valores seguros (CLAVE)
 	var shield_parent = _shield.get_parent() if _shield else null
 	var bow_parent = bow_instance.get_parent() if bow_instance else null
 
 	match [shield_parent, bow_parent]:
-		# ESCUDO EN MANO → ESPALDA
 		[bone_shield, _]:
 			animar_escudo_a_espalda()
 			print("llamando al escudo")
-
-		# ESCUDO EN ESPALDA → MANO
 		[bone_espalda, _]:
 			animar_escudo_a_mano()
-			print("volviendo a la mano al escudo")
-
-		# ARCO EN MANO → ESPALDA
 		[_, attach_point]:
 			animar_bow_espalda()
 			print("llamando al arco")
-
-	# ARCO YA EN ESPALDA → (si luego haces volver a mano)
 		[_, bone_espalda]:
-			animar_bow_espalda()
+			animar_bow_a_mano()
 			print("arco ya en espalda")
 
 		_:

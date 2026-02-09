@@ -12,7 +12,7 @@ var velocity: Vector3
 var shoot_arrow := false
 
 func _ready():
-	Weapons.connect("shoot", Callable(self, "on_shoot"))
+	Weapons.connect("shoot", Callable(self , "on_shoot"))
 
 
 func on_shoot() -> void:
@@ -42,7 +42,7 @@ func _on_attack_area_body_entered(body: Node):
 			#get_parent().remove_child(self)
 			#body.get_parent().add_child(self)
 	else:
-		print("Tipo de objeto: ", body.get_class()) 
+		print("Tipo de objeto: ", body.get_class())
 	
 	await get_tree().create_timer(4.0).timeout
 	queue_free()
