@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bd5yprjvgjfqq"]
+[gd_scene format=3 uid="uid://bd5yprjvgjfqq"]
 
 [ext_resource type="PackedScene" uid="uid://eri7lkn1barl" path="res://Medieval Village MegaKit[Standard]/FBX/Floor_RedBrick.fbx" id="1_aqk2v"]
 [ext_resource type="Script" uid="uid://bkis1ptrgt3i8" path="res://scripts/GameManager.gd" id="1_gbfbk"]
@@ -31,304 +31,304 @@ sky_material = SubResource("ProceduralSkyMaterial_ioo17")
 background_mode = 2
 sky = SubResource("Sky_wse8f")
 
-[node name="Node3D" type="Node3D"]
+[node name="Node3D" type="Node3D" unique_id=1419028446]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.168354, 0, 0)
 script = ExtResource("1_gbfbk")
 
-[node name="Sword" parent="." instance=ExtResource("1_pkg7o")]
+[node name="Sword" parent="." unique_id=611307160 instance=ExtResource("1_pkg7o")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.8237538, 0.6200954, 0)
 
-[node name="Floor_RedBrick12" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick12" parent="." unique_id=1206499892 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.6819, 0, 0.0228078)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick12"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick12" unique_id=1948067985]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick12/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick12/NavigationRegion3D" unique_id=636993854]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick12/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick12/NavigationRegion3D/StaticBody3D" unique_id=298113487]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick13" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick13" parent="." unique_id=736689934 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.6395, 0, 0.0228078)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick13"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick13" unique_id=1807803102]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick13/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick13/NavigationRegion3D" unique_id=214110810]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick13/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick13/NavigationRegion3D/StaticBody3D" unique_id=635373454]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick22" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick22" parent="." unique_id=371914731 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.6395, 0, 1.99662)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick22"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick22" unique_id=973174867]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick22/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick22/NavigationRegion3D" unique_id=1942871653]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick22/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick22/NavigationRegion3D/StaticBody3D" unique_id=1623121521]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick23" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick23" parent="." unique_id=1687504897 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.7088, 0, 1.99662)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick23"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick23" unique_id=762777253]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick23/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick23/NavigationRegion3D" unique_id=398695182]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick23/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick23/NavigationRegion3D/StaticBody3D" unique_id=648306411]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick24" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick24" parent="." unique_id=2125832708 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.82733, 0, 1.99662)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick24"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick24" unique_id=321359767]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick24/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick24/NavigationRegion3D" unique_id=1914682918]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick24/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick24/NavigationRegion3D/StaticBody3D" unique_id=1880305790]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick25" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick25" parent="." unique_id=2119539393 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.88392, 0, 1.99662)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick25"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick25" unique_id=2023290002]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick25/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick25/NavigationRegion3D" unique_id=322188339]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick25/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick25/NavigationRegion3D/StaticBody3D" unique_id=1477480131]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick26" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick26" parent="." unique_id=1684013053 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.00522, 0, 1.99662)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick26"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick26" unique_id=1712968729]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick26/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick26/NavigationRegion3D" unique_id=1442684677]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick26/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick26/NavigationRegion3D/StaticBody3D" unique_id=388600356]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick27" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick27" parent="." unique_id=517335135 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.0801, 0, 1.99662)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick27"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick27" unique_id=726087288]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick27/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick27/NavigationRegion3D" unique_id=1057979728]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick27/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick27/NavigationRegion3D/StaticBody3D" unique_id=2100229592]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick28" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick28" parent="." unique_id=1478066440 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.13073, 0, 1.99662)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick28"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick28" unique_id=652149809]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick28/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick28/NavigationRegion3D" unique_id=471543011]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick28/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick28/NavigationRegion3D/StaticBody3D" unique_id=59307422]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick29" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick29" parent="." unique_id=368366802 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.165994, 0, 1.99662)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick29"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick29" unique_id=1817789693]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick29/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick29/NavigationRegion3D" unique_id=261264243]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick29/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick29/NavigationRegion3D/StaticBody3D" unique_id=1596820133]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick30" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick30" parent="." unique_id=1415805767 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.645, 0, 1.99662)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick30"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick30" unique_id=2062790213]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick30/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick30/NavigationRegion3D" unique_id=20024198]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick30/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick30/NavigationRegion3D/StaticBody3D" unique_id=2080829338]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick31" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick31" parent="." unique_id=1367775195 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.61109, 0, 1.99662)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick31"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick31" unique_id=1732740722]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick31/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick31/NavigationRegion3D" unique_id=1431463950]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick31/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick31/NavigationRegion3D/StaticBody3D" unique_id=246690279]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick14" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick14" parent="." unique_id=601585585 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.68929, 0, 0.0228078)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick14"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick14" unique_id=1789762044]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick14/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick14/NavigationRegion3D" unique_id=1833363601]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick14/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick14/NavigationRegion3D/StaticBody3D" unique_id=184644545]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick15" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick15" parent="." unique_id=544929718 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.72917, 0, 0.0228078)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick15"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick15" unique_id=1814315587]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick15/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick15/NavigationRegion3D" unique_id=1848303248]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick15/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick15/NavigationRegion3D/StaticBody3D" unique_id=264573092]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick16" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick16" parent="." unique_id=45350116 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.77005, 0, 0.0228078)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick16"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick16" unique_id=1495978353]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick16/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick16/NavigationRegion3D" unique_id=2078795258]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick16/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick16/NavigationRegion3D/StaticBody3D" unique_id=2064051227]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick17" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick17" parent="." unique_id=382892963 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.80448, 0, 0.0228078)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick17"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick17" unique_id=2068292681]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick17/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick17/NavigationRegion3D" unique_id=636035108]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick17/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick17/NavigationRegion3D/StaticBody3D" unique_id=1465811260]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick18" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick18" parent="." unique_id=1593616889 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.89426, 0, 0.0228078)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick18"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick18" unique_id=111521028]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick18/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick18/NavigationRegion3D" unique_id=357937694]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick18/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick18/NavigationRegion3D/StaticBody3D" unique_id=94118127]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick19" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick19" parent="." unique_id=2074262480 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0170507, 0, 0.0228078)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick19"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick19" unique_id=1058769126]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick19/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick19/NavigationRegion3D" unique_id=1558817787]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick19/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick19/NavigationRegion3D/StaticBody3D" unique_id=2057752880]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick20" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick20" parent="." unique_id=89251902 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.99482, 0, 0.0228078)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick20"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick20" unique_id=1428164106]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick20/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick20/NavigationRegion3D" unique_id=854994512]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick20/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick20/NavigationRegion3D/StaticBody3D" unique_id=175278244]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="Floor_RedBrick21" parent="." instance=ExtResource("1_aqk2v")]
+[node name="Floor_RedBrick21" parent="." unique_id=1677420721 instance=ExtResource("1_aqk2v")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.85528, 0, 0.0228078)
 
-[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick21"]
+[node name="NavigationRegion3D" type="NavigationRegion3D" parent="Floor_RedBrick21" unique_id=2023622539]
 transform = Transform3D(3.87283, 0, 0, 0, 0.475825, 0, 0, 0, 2, -0.991448, 0, 0)
 navigation_mesh = SubResource("NavigationMesh_036b0")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick21/NavigationRegion3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Floor_RedBrick21/NavigationRegion3D" unique_id=718471280]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick21/NavigationRegion3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor_RedBrick21/NavigationRegion3D/StaticBody3D" unique_id=1147703705]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.269967, -0.0118408, -0.0276189)
 shape = SubResource("BoxShape3D_dwbse")
 
-[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=130064981]
 transform = Transform3D(1, 0, 0, 0, 0.38094115, 0.92459935, 0, -0.92459935, 0.38094115, 13.790031, 16.74502, 0.958118)
 
-[node name="Portal_1" type="Node3D" parent="."]
+[node name="Portal_1" type="Node3D" parent="." unique_id=591865413]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.544736, -0.072467506, 1.5498543)
 script = ExtResource("5_pkg7o")
 target_scene_path = "uid://bk1via4tlx0t4"
 
-[node name="shield" parent="Portal_1" instance=ExtResource("8_ioo17")]
+[node name="shield" parent="Portal_1" unique_id=1134178226 instance=ExtResource("8_ioo17")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.53153676, 0)
 
-[node name="Area" type="Area3D" parent="Portal_1"]
+[node name="Area" type="Area3D" parent="Portal_1" unique_id=1855290136]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11082393, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Portal_1/Area"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Portal_1/Area" unique_id=954081883]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0845137, 0)
 shape = SubResource("SphereShape3D_wse8f")
 
-[node name="Escudo" parent="." instance=ExtResource("8_gbfbk")]
+[node name="Escudo" parent="." unique_id=600059764 instance=ExtResource("8_gbfbk")]
 transform = Transform3D(0.585, 0, 0, 0, 0.293, 0, 0, 0, 0.29, 4.5191116, 0.67789656, 1.6926135)
 
-[node name="Player" parent="." instance=ExtResource("7_pkg7o")]
+[node name="Player" parent="." unique_id=7408623 instance=ExtResource("7_pkg7o")]
 transform = Transform3D(-0.2560026, 0, -0.9666761, 0, 1, 0, 0.9666761, 0, -0.2560026, 11.17697, 0, 0)
 
-[node name="bow" parent="." instance=ExtResource("8_wse8f")]
+[node name="bow" parent="." unique_id=2008678852 instance=ExtResource("8_wse8f")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4829893, 0.5233498, 2.109446)
 
-[node name="Enemy" parent="." instance=ExtResource("9_ioo17")]
+[node name="Enemy" parent="." unique_id=513317406 instance=ExtResource("9_ioo17")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.066681, 0.023349367, 2.6730087)
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1858888123]
 environment = SubResource("Environment_ic0uy")
 
 [connection signal="area_entered" from="Portal_1/Area" to="Portal_1" method="_on_area_area_entered"]

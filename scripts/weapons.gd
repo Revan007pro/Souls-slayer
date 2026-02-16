@@ -26,6 +26,9 @@ var camera_pivot: Node3D = null
 var camera_offset_active: bool = false
 var original_camera_pos: Vector3
 var original_pivot_pos: Vector3
+var _vector2: Vector2 = Vector2.ZERO
+
+var moveBow: bool = false
 
 
 var armas: Dictionary = {
@@ -265,12 +268,18 @@ func ani_bow() -> void:
 			flecha_actual.rotation_degrees = Vector3(-15.4, 164.0, 178.6)
 			flecha_actual.scale = Vector3(0.172, 0.472, 0.208)
 			diana.visible = true
+			await get_tree().create_timer(0.5).timeout
 			move_camera_to_shoulder()
-			
+
+			#GameManager.player_instance.sword_state = 5 # 5 = BOW (según tu enum)
+			#moveBow = true
+			#anim_playback.travel("arrowState")
 
 		elif Input.is_action_just_released("block") and flecha_actual != null:
 			# guardar transform global
+			shoot_arrow = true
 			var global_transform = flecha_actual.global_transform
+			ready_to_shoot = false
 
 			punto.remove_child(flecha_actual)
 			get_tree().current_scene.add_child(flecha_actual)
@@ -279,12 +288,31 @@ func ani_bow() -> void:
 			anim_playback.travel("Ani_player_arrow_disparo")
 
 			emit_signal("shoot") # solo dispara la señal
-
+			bow_equipped = true
 			flecha_actual = null
 			has_arrow = false
 			diana.visible = false
+			await get_tree().create_timer(0.5).timeout
 			reset_camera_position()
+			Events.spina_1.position.z = -0.002
 
+func moverEsqueletoAim(event: InputEvent) -> void:
+	#if camera_pivot:
+	#	print("se encontro el pivote")
+	#	return
+	#if _camara.position.z >= 0:
+	#	# Movimiento relativo (desde el último frame)
+	#var movimiento_relativo = event.relative
+	#	
+	# Posición absoluta del ratón
+	#var posicion_absoluta = event.position
+	#	
+	#	# Velocidad del movimiento
+	#var velocidad = event.velocity
+	if player_camera.rotation.y >= 0 and event is InputEventMouseMotion:
+		Events.setgoblinInstance(goblin_instance)
+		Events.spina_1.position.z += (event as InputEventMouseMotion).relative.y * 0.002
+	
 func _wait_sword() -> Node3D:
 	if _sword_instance != null and is_instance_valid(_sword_instance):
 		return _sword_instance

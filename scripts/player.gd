@@ -15,7 +15,7 @@ var is_combact: bool = false
 var _dialogue_active = false
 var tengo_escudo: bool = false
 
-enum SwordState {NONE, DRAWING, DRAWN, SHEATHING, ATTACKING}
+enum SwordState {NONE, DRAWING, DRAWN, SHEATHING, ATTACKING, BOW}
 var sword_state: SwordState = SwordState.NONE
 
 
@@ -51,7 +51,6 @@ var _desvainar: bool = false
 var _desvainar_with: bool = false
 
 var is_attacking: bool = false
-var ready_to_shoot: bool = false
 var equiparCosas: bool = false
 var wait_star: float = 2.8
 var wait_to_star: bool = false
@@ -83,7 +82,9 @@ func _ready() -> void:
 	_goblin_instance = _goblin_fbx.instantiate()
 	add_child(_goblin_instance)
 	Weapons.set_goblin_instance(_goblin_instance)
+	Events.setgoblinInstance(_goblin_instance) # para desactivar el control de boneControl
 	anim_tree = _goblin_instance.get_node("anim_tree")
+	#Events.setgoblinInstance(_goblin_instance) solo para ver si detecto la marca
 	
 	
 	if anim_tree:
@@ -156,7 +157,8 @@ func _movimiento_jugador(delta: float) -> void:
 		_vector2 = Vector2.ZERO
 
 	anim_tree.set("parameters/State/blend_position", _vector2)
-
+	anim_tree.set("parameters/Arrow State/blend_position", _vector2)
+	
 
 func _desvainar_espada() -> void:
 	if Input.is_action_just_pressed("desvainar") and Inventario._inventario_.has("espada"):
@@ -257,6 +259,10 @@ func _input(event: InputEvent) -> void:
 	var _enemigo_instancia = enemy
 	const ZOOM_MIN: float = 0.005
 	const ZOOM_MAX: float = -5.0
+
+	while Weapons.ready_to_shoot:
+		Weapons.moverEsqueletoAim(event) # se le tiene que pasar el event para que funcione
+		break
 	
 	if is_dead:
 		return
@@ -290,7 +296,7 @@ func _input(event: InputEvent) -> void:
 		if Enemy:
 			_camara.look_at(Enemy.global_position)
 
-
+	
 func is_attaacking() -> void:
 	if Input.is_action_just_pressed("attack") and sword_state == SwordState.DRAWN:
 		is_combact = true
@@ -320,10 +326,12 @@ func play_get_up_animation() -> void:
 	anim_playback.travel("Get_up")
 	wait_to_star = true
 	_camera_can_move = false
+	Events.boneControl.active = false # desactiva el boneControl por el momento
 	await get_tree().create_timer(2.8).timeout
 	
 	set_physics_process(true)
 	_camera_can_move = true
+	Events.boneControl.active = true # activa el control deboneControl para los demas sistemas
 	anim_playback.travel("State")
 
 

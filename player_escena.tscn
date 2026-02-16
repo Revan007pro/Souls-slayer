@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://dl0wxmfcihyvx"]
+[gd_scene format=3 uid="uid://dl0wxmfcihyvx"]
 
 [ext_resource type="Script" uid="uid://m8m6msav2jrv" path="res://scripts/player.gd" id="1_wvlaw"]
 [ext_resource type="PackedScene" uid="uid://b6vrdgxpuou7p" path="res://healt.tscn" id="4_2les7"]
@@ -19,30 +19,33 @@ size = Vector3(0.042816162, 0.24234772, 0.06402588)
 [sub_resource type="BoxShape3D" id="BoxShape3D_2les7"]
 size = Vector3(1, 0.8982849, 0.48583984)
 
-[node name="Player" type="CharacterBody3D" groups=["Player"]]
+[node name="Player" type="CharacterBody3D" unique_id=1816289397 groups=["Player"]]
 script = ExtResource("1_wvlaw")
 _goblin_fbx = ExtResource("5_2les7")
 
-[node name="Pivote" type="Node3D" parent="."]
+[node name="Pivote" type="Node3D" parent="." unique_id=1537793912]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.89827317, 0.01488772)
 
-[node name="Camera3D" type="Camera3D" parent="Pivote"]
-transform = Transform3D(-0.98869103, 0, 0.14996666, 0, 1, 0, -0.14996666, 0, -0.98869103, 0, 0.1864236, -1.0801115)
+[node name="Camera3D" type="Camera3D" parent="Pivote" unique_id=1154202020]
+transform = Transform3D(-0.9999725, 0, 0.007417485, 0, 1, 0, -0.007417485, 0, -0.9999725, 0, 0.1864236, -1.0801115)
 
-[node name="RigidBody3D" type="RigidBody3D" parent="."]
+[node name="Aim" type="Marker3D" parent="Pivote/Camera3D" unique_id=401285040]
+transform = Transform3D(-0.9999724, 0, -0.007417484, 0, 1, 0, 0.007417484, 0, -0.9999724, -0.0027282643, -0.16424513, -2.000626)
 
-[node name="RayCast3D" type="RayCast3D" parent="."]
+[node name="RigidBody3D" type="RigidBody3D" parent="." unique_id=91827344]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="RayCast3D" type="RayCast3D" parent="." unique_id=629399017]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1795687200]
 layer = 0
 
-[node name="healt" parent="CanvasLayer" instance=ExtResource("4_2les7")]
+[node name="healt" parent="CanvasLayer" unique_id=1286135486 instance=ExtResource("4_2les7")]
 offset_left = 114.0
 offset_top = 43.0
 offset_right = 367.0
 offset_bottom = 70.0
 
-[node name="Slot1" type="TextureRect" parent="CanvasLayer"]
+[node name="Slot1" type="TextureRect" parent="CanvasLayer" unique_id=1520222043]
 offset_left = 129.0
 offset_top = 337.0
 offset_right = 1153.0
@@ -52,7 +55,7 @@ localize_numeral_system = false
 texture = ExtResource("5_far6r")
 stretch_mode = 4
 
-[node name="Slot3" type="TextureRect" parent="CanvasLayer"]
+[node name="Slot3" type="TextureRect" parent="CanvasLayer" unique_id=567278737]
 offset_left = 184.0
 offset_top = 413.0
 offset_right = 1208.0
@@ -63,7 +66,7 @@ texture = ExtResource("5_far6r")
 expand_mode = 3
 stretch_mode = 4
 
-[node name="Slot4" type="TextureRect" parent="CanvasLayer"]
+[node name="Slot4" type="TextureRect" parent="CanvasLayer" unique_id=1360955008]
 offset_left = 129.00002
 offset_top = 488.99997
 offset_right = 1829.001
@@ -74,9 +77,9 @@ texture = ExtResource("5_far6r")
 expand_mode = 2
 stretch_mode = 4
 
-[node name="CanvasLayer" type="CanvasLayer" parent="CanvasLayer" groups=["UI"]]
+[node name="CanvasLayer" type="CanvasLayer" parent="CanvasLayer" unique_id=1703215348 groups=["UI"]]
 
-[node name="Icon1" type="TextureRect" parent="CanvasLayer/CanvasLayer"]
+[node name="Icon1" type="TextureRect" parent="CanvasLayer/CanvasLayer" unique_id=1047818188]
 z_index = 1
 z_as_relative = false
 offset_left = 143.0
@@ -85,7 +88,7 @@ offset_right = 177.0
 offset_bottom = 406.0
 expand_mode = 1
 
-[node name="Icon3" type="TextureRect" parent="CanvasLayer/CanvasLayer"]
+[node name="Icon3" type="TextureRect" parent="CanvasLayer/CanvasLayer" unique_id=1264135202]
 z_index = 1
 z_as_relative = false
 offset_left = 236.99995
@@ -96,7 +99,7 @@ rotation = -4.712389
 scale = Vector2(0.9122805, 1.4992865)
 expand_mode = 1
 
-[node name="Icon4" type="TextureRect" parent="CanvasLayer/CanvasLayer"]
+[node name="Icon4" type="TextureRect" parent="CanvasLayer/CanvasLayer" unique_id=1273188056]
 z_index = 1
 z_as_relative = false
 offset_left = 143.0
@@ -105,7 +108,7 @@ offset_right = 177.0
 offset_bottom = 562.0
 expand_mode = 1
 
-[node name="Icon2" type="TextureRect" parent="CanvasLayer/CanvasLayer"]
+[node name="Icon2" type="TextureRect" parent="CanvasLayer/CanvasLayer" unique_id=743366851]
 z_index = 1
 z_as_relative = false
 offset_left = 90.0
@@ -114,7 +117,7 @@ offset_right = 125.0
 offset_bottom = 488.0
 expand_mode = 1
 
-[node name="Inventario" type="TextureRect" parent="CanvasLayer/CanvasLayer"]
+[node name="Inventario" type="TextureRect" parent="CanvasLayer/CanvasLayer" unique_id=1546240801]
 visible = false
 offset_left = 406.0
 offset_top = 59.0
@@ -123,7 +126,7 @@ offset_bottom = 578.0
 texture = ExtResource("5_o77oc")
 expand_mode = 1
 
-[node name="Panel" type="Panel" parent="CanvasLayer/CanvasLayer"]
+[node name="Panel" type="Panel" parent="CanvasLayer/CanvasLayer" unique_id=835911647]
 anchors_preset = -1
 anchor_bottom = 0.076000005
 offset_left = 949.0
@@ -131,26 +134,26 @@ offset_top = 514.0
 offset_right = 989.0
 offset_bottom = 504.75198
 
-[node name="contador" type="Label" parent="CanvasLayer/CanvasLayer/Panel"]
+[node name="contador" type="Label" parent="CanvasLayer/CanvasLayer/Panel" unique_id=1102770556]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 horizontal_alignment = 1
 
-[node name="diana" type="TextureRect" parent="CanvasLayer/CanvasLayer/Panel"]
+[node name="diana" type="TextureRect" parent="CanvasLayer/CanvasLayer/Panel" unique_id=515612987]
 visible = false
 layout_mode = 0
-offset_left = -424.0
-offset_top = -233.0
-offset_right = 842.66675
-offset_bottom = 766.99976
+offset_left = -464.00003
+offset_top = -227.0
+offset_right = 802.66675
+offset_bottom = 772.99976
 scale = Vector2(0.06, 0.06)
 localize_numeral_system = false
 texture = ExtResource("5_5dc1a")
 expand_mode = 2
 stretch_mode = 4
 
-[node name="Slot2" type="TextureRect" parent="CanvasLayer"]
+[node name="Slot2" type="TextureRect" parent="CanvasLayer" unique_id=1751309505]
 clip_children = 2
 offset_left = 78.00006
 offset_top = 417.0
@@ -159,34 +162,34 @@ offset_bottom = 1953.0
 scale = Vector2(0.06, 0.06)
 texture = ExtResource("5_far6r")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." groups=["Player"]]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=302856336 groups=["Player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7378235, 0)
 shape = SubResource("CapsuleShape3D_far6r")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="." unique_id=556542011]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.123166636, 0.12051448, -0.043078244)
 shape = SubResource("BoxShape3D_far6r")
 
-[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="." unique_id=1499231166]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.11606717, 0.12051448, -0.043078244)
 shape = SubResource("BoxShape3D_far6r")
 
-[node name="area_player" type="Area3D" parent="."]
+[node name="area_player" type="Area3D" parent="." unique_id=2145695699]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="area_player"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="area_player" unique_id=1644528707]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55294347, 0.25708008)
 shape = SubResource("BoxShape3D_2les7")
 
-[node name="Control" type="Control" parent="."]
+[node name="Control" type="Control" parent="." unique_id=1685190936]
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="dead_sonido" type="AudioStreamPlayer" parent="Control"]
+[node name="dead_sonido" type="AudioStreamPlayer" parent="Control" unique_id=155322828]
 stream = ExtResource("5_xe1mq")
 
-[node name="desvainar" type="AudioStreamPlayer" parent="Control"]
+[node name="desvainar" type="AudioStreamPlayer" parent="Control" unique_id=743129671]
 stream = ExtResource("7_far6r")
 
 [connection signal="dead_signal" from="." to="." method="_on_dead_signal"]

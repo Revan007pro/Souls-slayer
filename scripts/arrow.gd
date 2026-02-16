@@ -4,6 +4,7 @@ extends Node3D
 @export var speed: float = 40.8
 @export var gravity: float = 9.8
 @export var damage_amount: float = 50
+var target
 
 
 signal conectar_golpe(damage: float)
@@ -13,6 +14,7 @@ var shoot_arrow := false
 
 func _ready():
 	Weapons.connect("shoot", Callable(self , "on_shoot"))
+	target = GameManager.player_instance.get_node("Pivote/Camera3D/Aim")
 
 
 func on_shoot() -> void:
@@ -20,18 +22,18 @@ func on_shoot() -> void:
 		return
 
 	shoot_arrow = true
-	var forward = global_transform.basis.y.normalized()
-	forward.y += 0.1
+	var forward = global_transform.basis.y.normalized() # O este
+	forward.y += 0.1 # pequeño arco hacia arriba
 	velocity = forward * speed
 
 func _physics_process(delta):
 	if not shoot_arrow:
 		return
-
 	position += velocity * delta
 	velocity.y -= gravity * delta
-	look_at(global_position + velocity, Vector3.UP)
-
+	#look_at(global_position)
+	look_at(target.position + velocity, Vector3.UP)
+	
 
 func _on_attack_area_body_entered(body: Node):
 	if body.is_in_group("enemy") or body.is_in_group("Player"):
@@ -41,6 +43,8 @@ func _on_attack_area_body_entered(body: Node):
 			body.take_damage(damage_amount)
 			#get_parent().remove_child(self)
 			#body.get_parent().add_child(self)
+			queue_free()
+		
 	else:
 		print("Tipo de objeto: ", body.get_class())
 	
