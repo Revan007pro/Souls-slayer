@@ -14,8 +14,7 @@ var shoot_arrow := false
 
 func _ready():
 	Weapons.connect("shoot", Callable(self , "on_shoot"))
-	target = GameManager.player_instance.get_node("Pivote/Camera3D/Aim")
-
+	
 
 func on_shoot() -> void:
 	if shoot_arrow:
@@ -23,7 +22,7 @@ func on_shoot() -> void:
 
 	shoot_arrow = true
 	var forward = global_transform.basis.y.normalized() # O este
-	forward.y += 0.1 # pequeño arco hacia arriba
+	forward.y -= 0.1 # pequeño arco hacia abajo
 	velocity = forward * speed
 
 func _physics_process(delta):
@@ -32,7 +31,7 @@ func _physics_process(delta):
 	position += velocity * delta
 	velocity.y -= gravity * delta
 	#look_at(global_position)
-	look_at(target.position + velocity, Vector3.UP)
+	look_at(global_position + velocity, Vector3.UP)
 	
 
 func _on_attack_area_body_entered(body: Node):

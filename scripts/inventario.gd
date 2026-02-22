@@ -11,13 +11,16 @@ var objetos_iconos := {
 	"espada": preload("res://Menu/Iconos/espada.png"),
 	"_escudo_": preload("res://Menu/Iconos/escudo_ico.png"),
 	"bow": preload("res://Menu/Iconos/bow-removebg-preview.png"),
+	"selec": preload("res://Imagenes/seleccionar.png"),
 	
 }
 var ubicacion_objeto := {
-	"espada": 2,
+	"espada": 0,
 	"_escudo_": 1,
-	"bow": 1,
+	"bow": 2,
 }
+
+
 var mini_inventario: Dictionary = {
 	2: [],
 	1: [],
@@ -41,6 +44,7 @@ func invetarioPlayer() -> void:
 	var _arco = world.find_child("bow", true, false)
 	if Input.is_action_just_pressed("inventario"):
 		print("📦 Abriendo inventario", _inventario_)
+
 	if _inventario_.has("_escudo_") and escudo and escudo.name != "_shield":
 		escudo.queue_free()
 	if _inventario_.has("espada") and _sword and _sword.name != "SwordEquipped":
@@ -54,6 +58,7 @@ func actualizar_slots(ui) -> void:
 
 	if Input.is_action_just_pressed("fast_inven"):
 		open_inventario = true
+		agregarInventario()
 		if inv.visible == false:
 			print("inventario instanciado")
 			inv.visible = true
@@ -65,11 +70,11 @@ func actualizar_slots(ui) -> void:
 			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 
 
-	for i in _inventario_:
-		if ubicacion_objeto.has(i):
-			var index = ubicacion_objeto[i]
-			var icon = ui.get_node("Icon" + (str(index + 1)))
-			icon.texture = objetos_iconos[i]
+	#for i in _inventario_:
+	#	if ubicacion_objeto.has(i):
+	#		var index = ubicacion_objeto[i]
+	#		var icon = ui.get_node("Icon" + (str(index + 1)))
+	#		icon.texture = objetos_iconos[i]
 
 				
 			#icon.custom_minimum_size = Vector2(100, 100)
@@ -126,3 +131,12 @@ func _actualizar_contador(new_count: int) -> void:
 	var cont = ui.get_node("Panel/contador")
 	if cont:
 		cont.text = str(new_count)
+
+
+func agregarInventario() -> void:
+	for i in _inventario_.size():
+		var item = _inventario_[i]
+		var iconInv = ui.get_node("Inventario/inv" + str(i + 1))
+		
+		if iconInv:
+			iconInv.texture = objetos_iconos[item]
