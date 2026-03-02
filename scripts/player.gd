@@ -71,7 +71,8 @@ func _ready() -> void:
 				GameManager.add_souls(1)
 				print("Souls:", GameManager.souls)
 		)
-	
+
+
 	clase_guerrero()
 	GameManager.player_instance = self
 
@@ -85,27 +86,29 @@ func _ready() -> void:
 	Events.setgoblinInstance(_goblin_instance) # para desactivar el control de boneControl
 	anim_tree = _goblin_instance.get_node("anim_tree")
 	#Events.setgoblinInstance(_goblin_instance) solo para ver si detecto la marca
-	
-	
 	if anim_tree:
 		anim_playback = anim_tree.get("parameters/playback")
 	Weapons.set_anim_tree(anim_tree)
 	Weapons.set_playback(anim_playback)
 	call_deferred("_deferred_ready")
+	
+
 func _deferred_ready() -> void:
 	if is_first_spawn:
 		play_get_up_animation()
 	
 func _physics_process(delta: float) -> void:
 	Inventario.contador()
-	if not _salud.is_inside_tree():
-		print("⚠️ BARRA NO ESTÁ EN EL ÁRBOL")
+	#if not _salud.is_inside_tree():
+	#	print("⚠️ BARRA NO ESTÁ EN EL ÁRBOL")
 	if is_dead:
 		return
 	parry()
+	
 	nex_level()
 	Weapons.instaciar_bow()
 	Weapons.ani_bow()
+	Weapons.equiparCarcaj()
 	Inventario.invetarioPlayer()
 	_movimiento_jugador(delta)
 	conectar_signal(objeto_cercano, ui)
@@ -124,12 +127,12 @@ func _physics_process(delta: float) -> void:
 		print("Jugador recogió:", objeto_cercano.name)
 		objeto_cercano = null
 
-	
+
 func conectar_signal(area: Area3D, ui) -> void:
 	if Input.is_action_just_pressed("Dialogue") and objeto_cercano:
 		Inventario._inventario_.append(String(area.name))
 	if Input.is_action_just_pressed("Dialogue") and Inventario._inventario_.has("_escudo_"):
-		print("escudo en el inventario")
+		print("escudo en el inventario") # se necesita otro metodo para despues
 		Weapons._escudo_()
 	Inventario.actualizar_slots(ui)
 	if Inventario.open_inventario:
@@ -157,7 +160,7 @@ func _movimiento_jugador(delta: float) -> void:
 		_vector2 = Vector2.ZERO
 
 	anim_tree.set("parameters/State/blend_position", _vector2)
-	anim_tree.set("parameters/Arrow State/blend_position", _vector2)
+	#anim_tree.set("parameters/Arrow State/blend_position", _vector2)
 	
 
 func _desvainar_espada() -> void:
@@ -373,10 +376,10 @@ func _on_area_3d_area_entered(area: Area3D) -> void:
 		_dialogue_balloon = DialogueManager.show_dialogue_balloon(Agregar)
 		_dialogue_active = true
 		print("Jugador dentro del área, mostrando diálogo.")
+		print("el nombre es: ", area.name)
 	
 	if Inventario.objetos_iconos.has(area.name) and _dialogue_active:
 		objeto_cercano = area
-		#print("🧭 Puedes recoger:", area.name)
 		emit_signal("recoger_objeto", area)
 	
 		

@@ -7,11 +7,12 @@ var _inventario_: Array = []
 var fast_invetory: bool = false
 var inven_texture: Texture = preload("res://Imagenes/Inventario.png")
 
-var objetos_iconos := {
+var objetos_iconos: Dictionary = {
 	"espada": preload("res://Menu/Iconos/espada.png"),
 	"_escudo_": preload("res://Menu/Iconos/escudo_ico.png"),
 	"bow": preload("res://Menu/Iconos/bow-removebg-preview.png"),
 	"selec": preload("res://Imagenes/seleccionar.png"),
+	"carcaj": preload("res://Imagenes/carcaj_png.png")
 	
 }
 var ubicacion_objeto := {
@@ -42,6 +43,7 @@ func invetarioPlayer() -> void:
 	var escudo = world.find_child("Escudo", true, false)
 	var _sword = world.find_child("Sword", true, false)
 	var _arco = world.find_child("bow", true, false)
+	var _carcajWorld = world.find_child("Carcaj", true, false)
 	if Input.is_action_just_pressed("inventario"):
 		print("📦 Abriendo inventario", _inventario_)
 
@@ -51,8 +53,11 @@ func invetarioPlayer() -> void:
 		_sword.queue_free()
 	if _inventario_.has("bow") and _arco and _arco.name != "arco":
 		_arco.queue_free()
-
-
+	if _inventario_.has("carcaj") and _carcajWorld and _carcajWorld.name != "carcajEquipado":
+		CarcajAleatorio.fechasAleatorias(true)
+		_carcajWorld.queue_free()
+	
+	
 func actualizar_slots(ui) -> void:
 	var inv = ui.get_node("Inventario")
 
@@ -111,7 +116,7 @@ func tween_call_back(inv, nueva_textura, pos_inicial, icon, direccion) -> void:
 
 	var t := create_tween()
 
-	t.tween_property(inv, "position", pos_salida, 1.02)
+	t.tween_property(inv, "position", pos_salida, 0.5)
 
 	t.tween_callback(func():
 		icon.texture = nueva_textura
@@ -140,3 +145,20 @@ func agregarInventario() -> void:
 		
 		if iconInv:
 			iconInv.texture = objetos_iconos[item]
+
+			if not iconInv.mouse_entered.is_connected(_on_hover):
+				iconInv.mouse_entered.connect(_on_hover.bind(iconInv))
+				iconInv.mouse_exited.connect(_off_hover.bind(iconInv))
+
+func _on_hover(node):
+	var h = node.get_node("Highlight")
+	if h:
+		h.visible = true
+		node.scale = Vector2(1.2, 1.09) # forma para hacer el hover con escala y color rojo
+		print(node.name)
+
+func _off_hover(node):
+	var h = node.get_node("Highlight")
+	if h:
+		h.visible = false
+		node.scale = Vector2(1, 1) # forma para desaparecer el hover color rojo

@@ -3,7 +3,9 @@ class_name instanciar_armas extends Node
 
 var bone_shield: BoneAttachment3D = null
 var attach_point: BoneAttachment3D = null
+var espalda: BoneAttachment3D = null
 var _shield: Node3D = null
+var _carcaj: Node3D = null
 var bow_instance: Node3D = null
 var escudo: Node3D
 var equiparCosas: bool = false
@@ -17,7 +19,11 @@ var disparar: bool = false
 var has_arrow: bool = false
 var shoot_arrow: bool = true
 var _sword_instance: Node3D
+var crearFlechas: bool = false
+
 signal shoot(disparar: bool)
+signal flechas(crearFlechas: bool)
+
 var flecha_actual: Node3D = null
 var gamer = GameManager.player_instance
 
@@ -26,7 +32,7 @@ var camera_pivot: Node3D = null
 var camera_offset_active: bool = false
 var original_camera_pos: Vector3
 var original_pivot_pos: Vector3
-var _vector2: Vector2 = Vector2.ZERO
+
 
 var moveBow: bool = false
 
@@ -35,9 +41,15 @@ var armas: Dictionary = {
 	"bow": preload("res://bow.tscn"),
 	"arrow": preload("res://arrow.tscn"),
 	"escudoW": preload("res://escudo_escena.tscn"),
-	"sword": preload("res://sword.tscn")
+	"sword": preload("res://sword.tscn"),
+	"carcaj": preload("res://carcaj.tscn")
 }
-
+func set_goblin_instance(goblin: Node3D) -> void:
+	goblin_instance = goblin
+	bone_shield = goblin.get_node("Skeleton3D/shield") as BoneAttachment3D
+	bone_scene = goblin_instance.get_node("Skeleton3D/BoneAttacch2") as BoneAttachment3D
+	attach_point = goblin_instance.get_node("Skeleton3D/BoneAttacch3") as BoneAttachment3D
+	espalda = goblin_instance.get_node("Skeleton3D/back") as BoneAttachment3D
 
 func _escudo_() -> void:
 	#is_combact = true
@@ -52,16 +64,30 @@ func _escudo_() -> void:
 		_shield.queue_free()
 		_shield = null
 		#is_combact = false
+
+
 func set_anim_tree(tree: AnimationTree) -> void:
 	anim_tree = tree
 
 func set_playback(pb: AnimationNodeStateMachinePlayback) -> void:
 	anim_playback = pb
-func set_goblin_instance(goblin: Node3D) -> void:
-	goblin_instance = goblin
-	bone_shield = goblin.get_node("Skeleton3D/shield") as BoneAttachment3D
-	bone_scene = goblin_instance.get_node("Skeleton3D/BoneAttacch2") as BoneAttachment3D
-	attach_point = goblin_instance.get_node("Skeleton3D/BoneAttacch3") as BoneAttachment3D
+
+
+func equiparCarcaj() -> void:
+	if Inventario._inventario_.has("carcaj"):
+		if _carcaj == null:
+			crearFlechas = true
+			_carcaj = armas["carcaj"].instantiate()
+			espalda.add_child(_carcaj)
+			_carcaj.position = Vector3(0.02, 0.108, -0.205)
+			_carcaj.rotation_degrees = Vector3(81.5, 0.5, 31.5)
+			_carcaj.scale = Vector3(0.2, 0.2, 0.2)
+			emit_signal("flechas", crearFlechas)
+			_carcaj.name = "carcajEquipado" # nota el carcar por debajo necesita arregar el tscn
+	else:
+		if _carcaj != null:
+			_carcaj.queue_free()
+			_carcaj = null
 
 
 func set_player_camera_reference(camera: Camera3D, pivot: Node3D):
@@ -73,20 +99,6 @@ func set_player_camera_reference(camera: Camera3D, pivot: Node3D):
 		original_pivot_pos = camera_pivot.position
 	print("✅ Referencia de cámara recibida")
 
-
-func instaciar_bow() -> void:
-	if Inventario._inventario_.has("bow") and not bow_equipped and not Inventario._inventario_.has("escudoW"):
-		if not Inventario._inventario_.has("_escudo_"):
-			attach_point = goblin_instance.get_node("Skeleton3D/BoneAttacch3")
-			bow_instance = armas["bow"].instantiate()
-			#bow_instance.position = Vector3(-0.05, 0, -0.126) posicion de la espalda
-			#bow_instance.rotation_degrees = Vector3(0, 90.9, 0)
-			bow_instance.position = Vector3(-0.037, -0.005, -0.001)
-			bow_instance.rotation_degrees = Vector3(49.7, 23.2, 82.8)
-			bow_instance.name = "arco"
-			attach_point.add_child(bow_instance)
-			bow_equipped = true
-			
 
 func move_camera_to_shoulder():
 	camera_offset_active = true
@@ -250,7 +262,7 @@ func ani_bow() -> void:
 	var punto = goblin_instance.get_node("Skeleton3D/finger")
 	var diana = Inventario.ui.get_node("Panel/diana")
 
-	if Inventario._inventario_.has("bow"):
+	if Inventario._inventario_.has("carcaj") and Inventario._inventario_.has("bow"):
 		if Input.is_action_just_pressed("block") and flecha_actual == null:
 			# hay un bug corregir que solo si se tiene el arco pueda hacer el zoom
 			ready_to_shoot = true
@@ -327,6 +339,18 @@ func _wait_sword() -> Node3D:
 	_sword_instance.rotation_degrees = Vector3(1.7, 63.5, 143.8)
 	_sword_instance.name = "SwordEquipped"
 	return _sword_instance
+
+
+func instaciar_bow() -> void:
+	if Inventario._inventario_.has("bow") and not bow_equipped and not Inventario._inventario_.has("escudoW"):
+		if not Inventario._inventario_.has("_escudo_"):
+			#attach_point = goblin_instance.get_node("Skeleton3D/BoneAttacch3") #error creo que hay otra referencia 
+			bow_instance = armas["bow"].instantiate()
+			bow_instance.position = Vector3(-0.037, -0.005, -0.001)
+			bow_instance.rotation_degrees = Vector3(49.7, 23.2, 82.8)
+			bow_instance.name = "arco"
+			attach_point.add_child(bow_instance)
+			bow_equipped = true
 
 func animar_escudo_a_espalda() -> void:
 	if equiparCosas or not _shield:
